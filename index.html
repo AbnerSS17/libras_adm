@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sinalário Libras • Central Administrativa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./config.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background-color: #f8fafc; }
+    .fade-in { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    /* Scrollbar refinada */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+  </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- TOAST DE NOTIFICAÇÃO -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden max-w-sm px-5 py-3.5 rounded-2xl shadow-2xl text-white font-semibold text-sm flex items-center gap-3 fade-in"></div>
+
+  <!-- LOADER GLOBAL -->
+  <div id="loader" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center">
+    <div class="bg-slate-900 border border-slate-800 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3.5">
+      <div class="w-6 h-6 border-3 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+      <span id="loader-text" class="font-semibold text-sm">Processando...</span>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- TELA 1: LOGIN EXCLUSIVO ADMINISTRADOR                                   -->
+  <!-- ======================================================================= -->
+  <section id="tela-auth" class="flex-1 flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
+    <div class="w-full max-w-md bg-slate-900/90 backdrop-blur-md border border-slate-800/80 text-white rounded-3xl shadow-2xl overflow-hidden fade-in">
+      <div class="p-8 pb-6 text-center border-b border-slate-800/80 relative">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center text-3xl shadow-lg shadow-amber-500/20">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <span class="inline-block px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-[11px] font-extrabold uppercase tracking-widest text-amber-400">
+          Acesso Restrito • Gestão
+        </span>
+        <h1 class="text-2xl font-extrabold text-white mt-2 tracking-tight">Sinalário Libras ADM</h1>
+        <p class="text-xs text-slate-400 mt-1">Curadoria de Sinais, Comentários, Sugestões e Comunidade</p>
+      </div>
+
+      <form onsubmit="executarLoginAdmin(event)" class="p-8 space-y-5">
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Usuário Administrador</label>
+          <div class="relative">
+            <i class="fa-solid fa-user-shield absolute left-4 top-3.5 text-slate-500"></i>
+            <input type="text" id="adm-perfil" required placeholder="admin"
+              class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-600 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Senha de Acesso</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-4 top-3.5 text-slate-500"></i>
+            <input type="password" id="adm-senha" required placeholder="••••••••"
+              class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-600 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+          </div>
+        </div>
+        <button type="submit"
+          class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold shadow-lg shadow-amber-500/20 transition cursor-pointer">
+          Entrar no Painel Administrativo
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ======================================================================= -->
+  <!-- TELA 2: DASHBOARD ADMINISTRATIVO RESPONSIVO (DESKTOP / TABLET / MOBILE) -->
+  <!-- ======================================================================= -->
+  <div id="tela-app" class="hidden flex-1 flex flex-col lg:flex-row">
+
+    <!-- BACKDROP MENU MOBILE -->
+    <div id="mobile-backdrop" onclick="toggleMenuMobile(false)" class="fixed inset-0 bg-slate-950/60 z-30 hidden lg:hidden"></div>
+
+    <!-- SIDEBAR LATERAL (FIXA NO DESKTOP, GAVETA NO MOBILE/TABLET) -->
+    <aside id="sidebar" class="fixed lg:sticky top-0 left-0 z-40 h-screen w-72 bg-slate-950 text-slate-300 flex flex-col justify-between transition-transform duration-300 -translate-x-full lg:translate-x-0 border-r border-slate-900 shrink-0">
+      <div>
+        <!-- Marca -->
+        <div class="h-16 px-6 flex items-center justify-between border-b border-slate-900">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-extrabold shadow-sm">
+              <i class="fa-solid fa-hands-asl-interpreting"></i>
+            </div>
+            <div>
+              <span class="font-extrabold text-white text-base leading-none block">Sinalário</span>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Painel ADM</span>
+            </div>
+          </div>
+          <button onclick="toggleMenuMobile(false)" class="lg:hidden text-slate-400 hover:text-white text-xl">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Links de Navegação -->
+        <nav class="p-4 space-y-1.5">
+          <button onclick="mudarAba('sinais')" id="nav-sinais"
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold bg-amber-500 text-slate-950 transition cursor-pointer">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-photo-film w-4"></i> Acervo de Sinais</span>
+          </button>
+
+          <button onclick="mudarAba('comentarios')" id="nav-comentarios"
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-comment-dots w-4"></i> Comentários</span>
+            <span id="badge-com" class="hidden px-2 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-extrabold">0</span>
+          </button>
+
+          <button onclick="mudarAba('sugestoes')" id="nav-sugestoes"
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-lightbulb w-4"></i> Sugestões</span>
+            <span id="badge-sug" class="hidden px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[10px] font-extrabold">0</span>
+          </button>
+
+          <button onclick="mudarAba('forum')" id="nav-forum"
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-comments w-4"></i> Fórum</span>
+          </button>
+
+          <button onclick="mudarAba('mensagens')" id="nav-mensagens"
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-envelope w-4"></i> Mensagens</span>
+            <span id="badge-msg" class="hidden px-2 py-0.5 rounded-full bg-indigo-500 text-white text-[10px] font-extrabold">0</span>
+          </button>
+
+          <button onclick="mudarAba('usuarios')" id="nav-usuarios"
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer">
+            <span class="flex items-center gap-3"><i class="fa-solid fa-users-gear w-4"></i> Usuários</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Rodapé Perfil ADM -->
+      <div class="p-4 border-t border-slate-900">
+        <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-2xl">
+          <div class="min-w-0">
+            <p id="sidebar-adm-nome" class="text-xs font-bold text-white truncate"></p>
+            <p id="sidebar-adm-perfil" class="text-[11px] text-amber-400 truncate"></p>
+          </div>
+          <button onclick="sair()" title="Sair do sistema" class="p-2 rounded-xl text-slate-400 hover:text-red-400 hover:bg-slate-800 transition cursor-pointer">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="flex-1 flex flex-col min-w-0">
+
+      <!-- TOPBAR MOBILE / TABLET & INDICADORES -->
+      <header class="bg-white border-b border-slate-200 sticky top-0 z-20 px-4 sm:px-8 h-16 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <button onclick="toggleMenuMobile(true)" class="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100">
+            <i class="fa-solid fa-bars text-lg"></i>
+          </button>
+          <h2 id="titulo-pagina-atual" class="font-extrabold text-slate-900 text-base sm:text-lg">Acervo Oficial de Sinais</h2>
+        </div>
+
+        <button onclick="atualizarTudo()" title="Sincronizar dados"
+          class="px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-600 flex items-center gap-2 cursor-pointer">
+          <i class="fa-solid fa-rotate"></i> <span class="hidden sm:inline">Atualizar</span>
+        </button>
+      </header>
+
+      <!-- CARDS DE RESUMO (KPIs) -->
+      <div class="max-w-7xl w-full mx-auto px-4 sm:px-8 pt-6">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shrink-0">
+              <i class="fa-solid fa-hands"></i>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold uppercase text-slate-400">Sinais Ativos</p>
+              <p id="kpi-sinais" class="text-xl font-extrabold text-slate-900">0</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-lg shrink-0">
+              <i class="fa-solid fa-comment-dots"></i>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold uppercase text-slate-400">Comentários Novos</p>
+              <p id="kpi-comentarios" class="text-xl font-extrabold text-slate-900">0</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg shrink-0">
+              <i class="fa-solid fa-lightbulb"></i>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold uppercase text-slate-400">Em Análise</p>
+              <p id="kpi-sugestoes" class="text-xl font-extrabold text-slate-900">0</p>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div>
+              <p class="text-[11px] font-bold uppercase text-slate-400">Usuários</p>
+              <p id="kpi-usuarios" class="text-xl font-extrabold text-slate-900">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- ABA 1: GERENCIAR ACERVO OFICIAL + CATEGORIAS À DIREITA              -->
+      <!-- =================================================================== -->
+      <main id="sec-sinais" class="max-w-7xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
+        <div class="flex flex-col xl:flex-row gap-6">
+          <!-- Lista de Sinais -->
+          <div class="flex-1 min-w-0">
+            <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs mb-5 flex flex-col sm:flex-row gap-3 justify-between">
+              <div class="relative flex-1">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
+                <input type="text" id="busca-adm" oninput="renderizarSinaisAdm()" placeholder="Pesquisar sinal por título ou descrição..."
+                  class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white text-sm outline-none focus:ring-2 focus:ring-amber-500" />
+              </div>
+              <div class="flex gap-2">
+                <button id="btn-limpar-cat" onclick="filtrarPorCategoriaAdm(null, null)"
+                  class="hidden px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer">
+                  Todos
+                </button>
+                <button onclick="abrirModalSinal()"
+                  class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-sm font-extrabold shadow-sm flex items-center justify-center gap-2 cursor-pointer">
+                  <i class="fa-solid fa-plus"></i> Novo Sinal
+                </button>
+              </div>
+            </div>
+
+            <div id="grid-sinais-adm" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+          </div>
+
+          <!-- Painel Direito de Categorias e Subcategorias -->
+          <aside class="w-full xl:w-80 shrink-0">
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sticky top-20">
+              <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                <h3 class="font-extrabold text-slate-800 flex items-center gap-2">
+                  <i class="fa-solid fa-folder-tree text-amber-500"></i> Categorias
+                </h3>
+                <button onclick="abrirModalCategoria()"
+                  class="text-xs font-extrabold px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 transition cursor-pointer">
+                  + Nova
+                </button>
+              </div>
+              <button onclick="filtrarPorCategoriaAdm(null, null)"
+                class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 mb-3 cursor-pointer">
+                Todas as Categorias
+              </button>
+              <div id="lista-cats-adm" class="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1"></div>
+            </div>
+          </aside>
+        </div>
+      </main>
+
+      <!-- =================================================================== -->
+      <!-- ABA 2: COMENTÁRIOS DOS USUÁRIOS SOBRE VÍDEOS / SINAIS               -->
+      <!-- =================================================================== -->
+      <main id="sec-comentarios" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
+          <div class="mb-5 pb-3 border-b border-slate-100">
+            <h3 class="text-lg font-extrabold text-slate-900">Comentários nos Vídeos e Sinais</h3>
+            <p class="text-xs text-slate-500">Feedbacks enviados pelos usuários indicando o nome do sinal comentado.</p>
+          </div>
+          <div id="lista-comentarios-adm" class="space-y-4"></div>
+        </div>
+      </main>
+
+      <!-- =================================================================== -->
+      <!-- ABA 3: SUGESTÕES (EM ANÁLISE -> FINALIZADO + RESPOSTA ADM)          -->
+      <!-- =================================================================== -->
+      <main id="sec-sugestoes" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
+          <div class="mb-5 pb-3 border-b border-slate-100">
+            <h3 class="text-lg font-extrabold text-slate-900">Sugestões de Conteúdo (Texto, Vídeo, Imagem e GIF)</h3>
+            <p class="text-xs text-slate-500">Analise as mídias sugeridas, envie uma resposta oficial e finalize ou publique na biblioteca.</p>
+          </div>
+          <div id="lista-sugestoes-adm" class="space-y-4"></div>
+        </div>
+      </main>
+
+      <!-- =================================================================== -->
+      <!-- ABA 4: MODERAÇÃO DO FÓRUM                                           -->
+      <!-- =================================================================== -->
+      <main id="sec-forum" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
+        <div id="lista-forum-adm" class="space-y-4"></div>
+      </main>
+
+      <!-- =================================================================== -->
+      <!-- ABA 5: MENSAGENS DIRETAS                                            -->
+      <!-- =================================================================== -->
+      <main id="sec-mensagens" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs h-fit">
+            <h3 class="font-extrabold text-slate-800 mb-3">Enviar Comunicado</h3>
+            <form onsubmit="enviarMensagemAdm(event)" class="space-y-3">
+              <input type="text" id="adm-msg-dest" list="datalist-perfis-adm" required placeholder="Para (@perfil)"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none" />
+              <datalist id="datalist-perfis-adm"></datalist>
+              <input type="text" id="adm-msg-assunto" required placeholder="Assunto"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none" />
+              <textarea id="adm-msg-texto" rows="4" required placeholder="Escreva sua mensagem..."
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none"></textarea>
+              <button type="submit" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm cursor-pointer">
+                Enviar Mensagem
+              </button>
+            </form>
+          </div>
+          <div class="md:col-span-2 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
+            <h3 class="font-extrabold text-slate-800 mb-3 pb-2 border-b border-slate-100">Caixa de Mensagens</h3>
+            <div id="lista-msg-adm" class="space-y-3"></div>
+          </div>
+        </div>
+      </main>
+
+      <!-- =================================================================== -->
+      <!-- ABA 6: CONTROLE DE USUÁRIOS                                         -->
+      <!-- =================================================================== -->
+      <main id="sec-usuarios" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+          <div class="p-5 border-b border-slate-100">
+            <h3 class="font-extrabold text-slate-900">Usuários Cadastrados</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-slate-50 text-xs uppercase text-slate-500 border-b border-slate-200">
+                <tr>
+                  <th class="px-5 py-3.5">Nome</th>
+                  <th class="px-5 py-3.5">@Perfil</th>
+                  <th class="px-5 py-3.5">Tipo</th>
+                  <th class="px-5 py-3.5">Status</th>
+                  <th class="px-5 py-3.5 text-right">Ação</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-usuarios-adm" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL: CADASTRAR / EDITAR SINAL OFICIAL                                 -->
+  <!-- ======================================================================= -->
+  <div id="modal-sinal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto fade-in">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+        <h3 id="modal-sinal-titulo" class="text-lg font-extrabold text-slate-900">Novo Sinal Oficial</h3>
+        <button onclick="fecharModal('modal-sinal')" class="text-2xl text-slate-400 hover:text-slate-700">&times;</button>
+      </div>
+      <form onsubmit="salvarSinal(event)" class="space-y-4">
+        <input type="hidden" id="sinal-id" />
+        <input type="hidden" id="sinal-url-atual" />
+        <input type="hidden" id="sinal-path-atual" />
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Título do Sinal</label>
+          <input type="text" id="sinal-titulo" required placeholder="Ex: Obrigado / Obrigada"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-amber-500" />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Categoria</label>
+            <select id="sinal-cat" onchange="atualizarSubcatsAdm()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Subcategoria</label>
+            <select id="sinal-subcat" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Texto Explicativo</label>
+          <textarea id="sinal-texto" rows="3" required placeholder="Descreva a configuração de mão, ponto de articulação e movimento..."
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tipo de Mídia</label>
+            <select id="sinal-tipo" onchange="toggleArquivoSinal()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
+              <option value="VIDEO">Vídeo (MP4/WebM)</option>
+              <option value="IMAGEM">Imagem (JPG/PNG)</option>
+              <option value="GIF">GIF Animado</option>
+              <option value="TEXTO">Somente Texto</option>
+            </select>
+          </div>
+          <div id="box-arquivo-sinal">
+            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Arquivo de Mídia</label>
+            <input type="file" id="sinal-arquivo" accept="video/*,image/*"
+              class="w-full text-xs text-slate-600 file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:font-bold file:bg-amber-50 file:text-amber-800" />
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="fecharModal('modal-sinal')" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">Cancelar</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm shadow-sm cursor-pointer">
+            Salvar no Acervo
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL: NOVA CATEGORIA / SUBCATEGORIA                                    -->
+  <!-- ======================================================================= -->
+  <div id="modal-cat" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl fade-in">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+        <h3 class="text-lg font-extrabold text-slate-900">Nova Categoria / Subcategoria</h3>
+        <button onclick="fecharModal('modal-cat')" class="text-2xl text-slate-400 hover:text-slate-700">&times;</button>
+      </div>
+      <form onsubmit="salvarCategoria(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Categoria Principal</label>
+          <input type="text" id="nova-cat-pai" list="datalist-cats-pai" required placeholder="Escolha existente ou digite uma nova"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-amber-500" />
+          <datalist id="datalist-cats-pai"></datalist>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Subcategoria</label>
+          <input type="text" id="nova-subcat" required placeholder="Ex: Verbos e Ações"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-amber-500" />
+        </div>
+        <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+          <button type="button" onclick="fecharModal('modal-cat')" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600">Cancelar</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm cursor-pointer">
+            Adicionar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- JAVASCRIPT DO PAINEL ADMINISTRATIVO                                     -->
+  <!-- ======================================================================= -->
+  <script>
+    const db = window.supabase.createClient(SUPABASE_CONFIG.URL, SUPABASE_CONFIG.ANON_KEY);
+    let admin = null;
+    let categorias = [];
+    let sinais = [];
+    let filtroCatAdm = null;
+    let filtroSubAdm = null;
+
+    const TITULOS_ABAS = {
+      sinais: 'Acervo Oficial de Sinais',
+      comentarios: 'Comentários nos Vídeos e Sinais',
+      sugestoes: 'Sugestões dos Usuários',
+      forum: 'Moderação do Fórum',
+      mensagens: 'Mensagens Diretas',
+      usuarios: 'Controle de Usuários'
+    };
+
+    window.onload = () => {
+      const salva = sessionStorage.getItem('sinalario_admin');
+      if (salva) { admin = JSON.parse(salva); iniciarPainel(); }
+    };
+
+    function showLoader(t = 'Processando...') {
+      document.getElementById('loader-text').innerText = t;
+      document.getElementById('loader').classList.remove('hidden');
+    }
+    function hideLoader() { document.getElementById('loader').classList.add('hidden'); }
+
+    function toast(msg, erro = false) {
+      const el = document.getElementById('toast');
+      el.innerHTML = `<i class="fa-solid ${erro ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i> <span>${msg}</span>`;
+      el.className = `fixed bottom-5 right-5 z-50 max-w-sm px-5 py-3.5 rounded-2xl shadow-2xl text-white font-semibold text-sm flex items-center gap-3 fade-in ${
+        erro ? 'bg-red-600' : 'bg-emerald-600'
+      }`;
+      el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 4000);
+    }
+
+    function toggleMenuMobile(abrir) {
+      document.getElementById('sidebar').classList.toggle('-translate-x-full', !abrir);
+      document.getElementById('mobile-backdrop').classList.toggle('hidden', !abrir);
+    }
+
+    async function executarLoginAdmin(e) {
+      e.preventDefault();
+      showLoader('Autenticando Administrador...');
+      const { data, error } = await db.rpc('autenticar_usuario', {
+        p_nome_perfil: document.getElementById('adm-perfil').value,
+        p_senha: document.getElementById('adm-senha').value,
+        p_tipo_acesso: 'ADMIN'
+      });
+      hideLoader();
+      if (error) return toast('Erro de conexão: ' + error.message, true);
+      if (!data.sucesso) return toast(data.mensagem, true);
+
+      admin = data.usuario;
+      sessionStorage.setItem('sinalario_admin', JSON.stringify(admin));
+      iniciarPainel();
+    }
+
+    function sair() {
+      sessionStorage.removeItem('sinalario_admin');
+      admin = null;
+      document.getElementById('tela-app').classList.add('hidden');
+      document.getElementById('tela-auth').classList.remove('hidden');
+    }
+
+    async function iniciarPainel() {
+      document.getElementById('tela-auth').classList.add('hidden');
+      document.getElementById('tela-app').classList.remove('hidden');
+      document.getElementById('sidebar-adm-nome').innerText = admin.nome;
+      document.getElementById('sidebar-adm-perfil').innerText = '@' + admin.perfilNome;
+      await atualizarTudo();
+    }
+
+    async function atualizarTudo() {
+      await Promise.all([
+        carregarCategorias(),
+        carregarSinais(),
+        carregarComentarios(),
+        carregarSugestoes(),
+        carregarForumAdm(),
+        carregarMensagensAdm(),
+        carregarUsuariosAdm()
+      ]);
+    }
+
+    function mudarAba(aba) {
+      ['sinais', 'comentarios', 'sugestoes', 'forum', 'mensagens', 'usuarios'].forEach(s => {
+        document.getElementById('sec-' + s).classList.add('hidden');
+        document.getElementById('nav-' + s).className = 'nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer';
+      });
+      document.getElementById('sec-' + aba).classList.remove('hidden');
+      document.getElementById('nav-' + aba).className = 'nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold bg-amber-500 text-slate-950 transition cursor-pointer';
+      document.getElementById('titulo-pagina-atual').innerText = TITULOS_ABAS[aba];
+      toggleMenuMobile(false);
+    }
+
+    function fecharModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function renderMidia(tipo, url) {
+      if (!url || tipo === 'TEXTO') return '';
+      return tipo === 'VIDEO'
+        ? `<video src="${url}" controls loop playsinline class="w-full max-h-56 rounded-xl bg-slate-950 object-contain"></video>`
+        : `<img src="${url}" class="w-full max-h-56 rounded-xl bg-slate-100 object-contain" />`;
+    }
+
+    // --- 1. CATEGORIAS E SINAIS ---
+    async function carregarCategorias() {
+      const { data } = await db.from('categorias').select('*').order('ordem');
+      categorias = data || [];
+      const unicas = [...new Set(categorias.map(c => c.categoria_pai))];
+
+      document.getElementById('datalist-cats-pai').innerHTML = unicas.map(c => `<option value="${c}">`).join('');
+      document.getElementById('sinal-cat').innerHTML = unicas.map(c => `<option value="${c}">${c}</option>`).join('');
+      atualizarSubcatsAdm();
+
+      document.getElementById('lista-cats-adm').innerHTML = unicas.map(cat => {
+        const subs = categorias.filter(c => c.categoria_pai === cat).map(c => c.subcategoria);
+        return `
+          <div class="border border-slate-100 rounded-xl overflow-hidden">
+            <button onclick="filtrarPorCategoriaAdm('${cat}', null)"
+              class="w-full text-left px-3 py-2 bg-slate-50 hover:bg-amber-50 text-xs font-extrabold text-slate-800 cursor-pointer">
+              ${cat}
+            </button>
+            <div class="divide-y divide-slate-50">
+              ${subs.map(sub => `
+                <button onclick="filtrarPorCategoriaAdm('${cat}', '${sub}')"
+                  class="w-full text-left pl-5 pr-3 py-1.5 text-xs text-slate-600 hover:text-amber-700 hover:bg-amber-50/40 cursor-pointer">
+                  › ${sub}
+                </button>`).join('')}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function filtrarPorCategoriaAdm(cat, sub) {
+      filtroCatAdm = cat;
+      filtroSubAdm = sub;
+      document.getElementById('btn-limpar-cat').classList.toggle('hidden', !cat);
+      renderizarSinaisAdm();
+    }
+
+    function atualizarSubcatsAdm() {
+      const cat = document.getElementById('sinal-cat').value;
+      const subs = categorias.filter(c => c.categoria_pai === cat).map(c => c.subcategoria);
+      document.getElementById('sinal-subcat').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    function abrirModalCategoria() {
+      document.getElementById('nova-cat-pai').value = '';
+      document.getElementById('nova-subcat').value = '';
+      document.getElementById('modal-cat').classList.remove('hidden');
+    }
+
+    async function salvarCategoria(e) {
+      e.preventDefault();
+      showLoader('Adicionando categoria...');
+      const { error } = await db.from('categorias').insert({
+        categoria_pai: document.getElementById('nova-cat-pai').value.trim(),
+        subcategoria: document.getElementById('nova-subcat').value.trim(),
+        criado_por: admin.perfilNome
+      });
+      hideLoader();
+      if (error) return toast(error.message, true);
+      fecharModal('modal-cat');
+      toast('Categoria adicionada!');
+      carregarCategorias();
+    }
+
+    async function carregarSinais() {
+      const { data } = await db.from('sinais').select('*').order('atualizado_em', { ascending: false });
+      sinais = data || [];
+      document.getElementById('kpi-sinais').innerText = sinais.length;
+      renderizarSinaisAdm();
+    }
+
+    function renderizarSinaisAdm() {
+      const q = document.getElementById('busca-adm').value.toLowerCase().trim();
+      const lista = sinais.filter(s =>
+        (!filtroCatAdm || s.categoria_pai === filtroCatAdm) &&
+        (!filtroSubAdm || s.subcategoria === filtroSubAdm) &&
+        (!q || s.titulo_sinal.toLowerCase().includes(q) || s.texto_explicativo.toLowerCase().includes(q))
+      );
+
+      document.getElementById('grid-sinais-adm').innerHTML = lista.length ? lista.map(s => `
+        <article class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 flex flex-col justify-between fade-in">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800">
+                ${s.categoria_pai} • ${s.subcategoria}
+              </span>
+              <span class="text-[10px] font-extrabold text-slate-400">${s.tipo_midia}</span>
+            </div>
+            <h3 class="text-lg font-extrabold text-slate-900 mb-3">${s.titulo_sinal}</h3>
+            ${renderMidia(s.tipo_midia, s.url_midia)}
+            <p class="text-sm text-slate-600 mt-3 leading-relaxed">${s.texto_explicativo}</p>
+          </div>
+          <div class="flex gap-2 pt-3 mt-4 border-t border-slate-100">
+            <button onclick='abrirModalSinal(${JSON.stringify(s).replace(/'/g, "&#39;")})'
+              class="flex-1 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-extrabold transition cursor-pointer">
+              <i class="fa-solid fa-pen-to-square mr-1"></i> Editar Mídia / Texto
+            </button>
+            <button onclick="excluirSinal('${s.id}', '${s.storage_path || ''}')"
+              class="px-3.5 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold transition cursor-pointer">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </article>`).join('') : '<div class="col-span-full bg-white p-10 rounded-2xl border border-slate-200 text-center text-slate-400 font-semibold">Nenhum sinal encontrado.</div>';
+    }
+
+    function toggleArquivoSinal() {
+      const isTexto = document.getElementById('sinal-tipo').value === 'TEXTO';
+      document.getElementById('box-arquivo-sinal').classList.toggle('hidden', isTexto);
+    }
+
+    function abrirModalSinal(s = null) {
+      document.getElementById('modal-sinal').classList.remove('hidden');
+      document.getElementById('sinal-arquivo').value = '';
+      if (s) {
+        document.getElementById('modal-sinal-titulo').innerText = 'Editar Sinal Oficial';
+        document.getElementById('sinal-id').value = s.id;
+        document.getElementById('sinal-url-atual').value = s.url_midia || '';
+        document.getElementById('sinal-path-atual').value = s.storage_path || '';
+        document.getElementById('sinal-titulo').value = s.titulo_sinal;
+        document.getElementById('sinal-cat').value = s.categoria_pai;
+        atualizarSubcatsAdm();
+        document.getElementById('sinal-subcat').value = s.subcategoria;
+        document.getElementById('sinal-texto').value = s.texto_explicativo;
+        document.getElementById('sinal-tipo').value = s.tipo_midia;
+      } else {
+        document.getElementById('modal-sinal-titulo').innerText = 'Novo Sinal Oficial';
+        document.getElementById('sinal-id').value = '';
+        document.getElementById('sinal-url-atual').value = '';
+        document.getElementById('sinal-path-atual').value = '';
+        document.getElementById('sinal-titulo').value = '';
+        document.getElementById('sinal-texto').value = '';
+      }
+      toggleArquivoSinal();
+    }
+
+    async function salvarSinal(e) {
+      e.preventDefault();
+      const id = document.getElementById('sinal-id').value;
+      const tipo = document.getElementById('sinal-tipo').value;
+      const file = document.getElementById('sinal-arquivo').files[0];
+      let urlMidia = document.getElementById('sinal-url-atual').value || null;
+      let storagePath = document.getElementById('sinal-path-atual').value || null;
+
+      try {
+        showLoader('Salvando sinal no acervo...');
+        if (tipo === 'TEXTO') {
+          if (storagePath) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove([storagePath]);
+          urlMidia = null; storagePath = null;
+        } else if (file) {
+          if (storagePath) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove([storagePath]);
+          const ext = file.name.split('.').pop();
+          storagePath = `oficiais/${Date.now()}_${Math.random().toString(36).slice(2, 7)}.${ext}`;
+          const { error: upErr } = await db.storage.from(SUPABASE_CONFIG.BUCKET).upload(storagePath, file);
+          if (upErr) throw upErr;
+          urlMidia = db.storage.from(SUPABASE_CONFIG.BUCKET).getPublicUrl(storagePath).data.publicUrl;
+        }
+
+        const payload = {
+          titulo_sinal: document.getElementById('sinal-titulo').value,
+          categoria_pai: document.getElementById('sinal-cat').value,
+          subcategoria: document.getElementById('sinal-subcat').value,
+          texto_explicativo: document.getElementById('sinal-texto').value,
+          tipo_midia: tipo,
+          url_midia: urlMidia,
+          storage_path: storagePath,
+          editado_por: admin.perfilNome,
+          atualizado_em: new Date().toISOString()
+        };
+
+        const res = id
+          ? await db.from('sinais').update(payload).eq('id', id)
+          : await db.from('sinais').insert(payload);
+
+        hideLoader();
+        if (res.error) return toast(res.error.message, true);
+        fecharModal('modal-sinal');
+        toast('Sinal salvo com sucesso!');
+        carregarSinais();
+      } catch (err) {
+        hideLoader();
+        toast('Erro no upload: ' + err.message, true);
+      }
+    }
+
+    async function excluirSinal(id, path) {
+      if (!confirm('Deseja excluir permanentemente este sinal do acervo?')) return;
+      showLoader('Excluindo...');
+      if (path) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove([path]);
+      await db.from('sinais').delete().eq('id', id);
+      hideLoader();
+      toast('Sinal excluído.');
+      carregarSinais();
+    }
+
+    // --- 2. COMENTÁRIOS ---
+    async function carregarComentarios() {
+      const { data } = await db.from('comentarios_sinais').select('*').order('criado_em', { ascending: false });
+      const lista = data || [];
+      const novos = lista.filter(c => c.status_leitura === 'NOVO').length;
+      document.getElementById('kpi-comentarios').innerText = novos;
+      const badge = document.getElementById('badge-com');
+      badge.innerText = novos;
+      badge.classList.toggle('hidden', novos === 0);
+
+      document.getElementById('lista-comentarios-adm').innerHTML = lista.length ? lista.map(c => `
+        <div class="p-4 rounded-2xl border ${c.status_leitura === 'NOVO' ? 'bg-amber-50/70 border-amber-300' : 'bg-slate-50 border-slate-200'}">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <span class="text-xs font-extrabold text-blue-700 bg-blue-50 px-3 py-1 rounded-full">
+              <i class="fa-solid fa-video mr-1"></i> Sinal: ${c.nome_video_sinal}
+            </span>
+            <span class="text-[11px] font-bold text-slate-500">Enviado por @${c.usuario_perfil} • ${c.status_leitura}</span>
+          </div>
+          <p class="text-sm text-slate-800 my-2">"${c.comentario_texto}"</p>
+          ${c.resposta_adm ? `
+            <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900">
+              <strong>Resposta ADM (@${c.respondido_por_adm}):</strong> ${c.resposta_adm}
+            </div>` : `
+            <div class="flex flex-col sm:flex-row gap-2 mt-3">
+              <input type="text" id="resp-com-${c.id}" placeholder="Escreva uma resposta para @${c.usuario_perfil}..."
+                class="flex-1 px-3.5 py-2 rounded-xl border border-slate-300 text-xs bg-white outline-none" />
+              <button onclick="responderComentario('${c.id}')"
+                class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold cursor-pointer">
+                Responder
+              </button>
+            </div>`}
+        </div>`).join('') : '<p class="text-sm text-slate-400 text-center py-6">Nenhum comentário enviado ainda.</p>';
+    }
+
+    async function responderComentario(id) {
+      const resp = document.getElementById('resp-com-' + id).value.trim();
+      if (!resp) return toast('Digite uma resposta.', true);
+      await db.from('comentarios_sinais').update({
+        status_leitura: 'RESPONDIDO',
+        resposta_adm: resp,
+        respondido_por_adm: admin.perfilNome,
+        respondido_em: new Date().toISOString()
+      }).eq('id', id);
+      toast('Resposta salva!');
+      carregarComentarios();
+    }
+
+    // --- 3. SUGESTÕES ---
+    async function carregarSugestoes() {
+      const { data } = await db.from('sugestoes').select('*').order('data_envio', { ascending: false });
+      const lista = data || [];
+      const emAnalise = lista.filter(s => s.status_sugestao === 'EM ANALISE').length;
+      document.getElementById('kpi-sugestoes').innerText = emAnalise;
+      const badge = document.getElementById('badge-sug');
+      badge.innerText = emAnalise;
+      badge.classList.toggle('hidden', emAnalise === 0);
+
+      document.getElementById('lista-sugestoes-adm').innerHTML = lista.length ? lista.map(s => `
+        <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50/70">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+            <span class="text-xs font-bold text-slate-600">@${s.usuario_perfil} • ${s.categoria_sugerida} › ${s.subcategoria_sugerida} (${s.tipo_midia})</span>
+            <span class="text-[11px] font-extrabold px-3 py-0.5 rounded-full ${s.status_sugestao === 'FINALIZADO' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+              ${s.status_sugestao}
+            </span>
+          </div>
+          <h4 class="font-extrabold text-slate-900 text-base">${s.titulo_sinal}</h4>
+          <p class="text-sm text-slate-600 my-2">${s.texto_sugestao}</p>
+          ${renderMidia(s.tipo_midia, s.url_midia)}
+          ${s.status_sugestao === 'EM ANALISE' ? `
+            <div class="mt-4 pt-3 border-t border-slate-200 space-y-2.5">
+              <input type="text" id="resp-sug-${s.id}" placeholder="Resposta oficial do ADM para o usuário..."
+                class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs bg-white outline-none" />
+              <div class="flex flex-wrap gap-2">
+                <button onclick='finalizarSugestao(${JSON.stringify(s).replace(/'/g, "&#39;")}, true)'
+                  class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer">
+                  <i class="fa-solid fa-check mr-1"></i> Finalizar e Publicar na Biblioteca
+                </button>
+                <button onclick='finalizarSugestao(${JSON.stringify(s).replace(/'/g, "&#39;")}, false)'
+                  class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold cursor-pointer">
+                  Finalizar Apenas com Resposta
+                </button>
+              </div>
+            </div>` : `<p class="text-xs text-slate-600 mt-3 p-2.5 rounded-xl bg-white border border-slate-200"><strong>Resposta ADM (@${s.avaliado_por_adm}):</strong> ${s.resposta_adm || 'Finalizado.'}</p>`}
+        </div>`).join('') : '<p class="text-sm text-slate-400 text-center py-6">Nenhuma sugestão enviada.</p>';
+    }
+
+    async function finalizarSugestao(s, publicar) {
+      const resp = document.getElementById('resp-sug-' + s.id).value.trim();
+      showLoader('Finalizando sugestão...');
+      await db.from('sugestoes').update({
+        status_sugestao: 'FINALIZADO',
+        aprovado_para_biblioteca: publicar,
+        resposta_adm: resp,
+        avaliado_por_adm: admin.perfilNome,
+        data_finalizacao: new Date().toISOString()
+      }).eq('id', s.id);
+
+      if (publicar) {
+        await db.from('sinais').insert({
+          titulo_sinal: s.titulo_sinal,
+          categoria_pai: s.categoria_sugerida,
+          subcategoria: s.subcategoria_sugerida,
+          texto_explicativo: s.texto_sugestao,
+          tipo_midia: s.tipo_midia,
+          url_midia: s.url_midia,
+          storage_path: s.storage_path,
+          editado_por: admin.perfilNome
+        });
+        carregarSinais();
+      }
+      hideLoader();
+      toast(publicar ? 'Sugestão finalizada e publicada!' : 'Sugestão finalizada!');
+      carregarSugestoes();
+    }
+
+    // --- 4. FÓRUM, MENSAGENS E USUÁRIOS ---
+    async function carregarForumAdm() {
+      const { data } = await db.from('forum_topicos').select('*').order('criado_em', { ascending: false });
+      document.getElementById('lista-forum-adm').innerHTML = (data || []).map(t => `
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-start justify-between gap-4">
+          <div>
+            <span class="text-xs font-bold text-purple-700">@${t.autor_perfil} • ${t.categoria_forum}</span>
+            <h4 class="font-extrabold text-slate-900 mt-0.5">${t.titulo}</h4>
+            <p class="text-sm text-slate-600 mt-1">${t.conteudo}</p>
+          </div>
+          <button onclick="excluirTopico('${t.id}')" class="px-3 py-1.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold shrink-0 cursor-pointer">
+            Excluir
+          </button>
+        </div>`).join('');
+    }
+    async function excluirTopico(id) {
+      if (!confirm('Excluir tópico do fórum?')) return;
+      await db.from('forum_topicos').delete().eq('id', id);
+      carregarForumAdm();
+    }
+
+    async function enviarMensagemAdm(e) {
+      e.preventDefault();
+      const dest = document.getElementById('adm-msg-dest').value.replace('@', '').trim().toLowerCase();
+      const { error } = await db.from('mensagens').insert({
+        remetente_perfil: admin.perfilNome,
+        destinatario_perfil: dest,
+        assunto: document.getElementById('adm-msg-assunto').value,
+        mensagem_texto: document.getElementById('adm-msg-texto').value
+      });
+      if (error) return toast('Perfil não encontrado: ' + error.message, true);
+      e.target.reset();
+      toast('Mensagem enviada!');
+      carregarMensagensAdm();
+    }
+
+    async function carregarMensagensAdm() {
+      const { data } = await db.from('mensagens').select('*')
+        .or(`remetente_perfil.eq.${admin.perfilNome},destinatario_perfil.eq.${admin.perfilNome}`)
+        .order('data_envio', { ascending: false });
+      const msgs = data || [];
+      const naoLidas = msgs.filter(m => m.destinatario_perfil === admin.perfilNome && !m.visualizada).length;
+      const badge = document.getElementById('badge-msg');
+      badge.innerText = naoLidas;
+      badge.classList.toggle('hidden', naoLidas === 0);
+
+      document.getElementById('lista-msg-adm').innerHTML = msgs.length ? msgs.map(m => {
+        const rec = m.destinatario_perfil === admin.perfilNome;
+        return `
+          <div onclick="${rec && !m.visualizada ? `marcarLidaAdm('${m.id}')` : ''}"
+            class="p-3.5 rounded-xl border text-xs ${rec && !m.visualizada ? 'bg-amber-50 border-amber-300 cursor-pointer' : 'bg-slate-50 border-slate-200'}">
+            <div class="flex justify-between font-bold mb-1">
+              <span>${rec ? 'De: @' + m.remetente_perfil : 'Para: @' + m.destinatario_perfil}</span>
+              <span>${m.visualizada ? 'Visualizada' : 'Não visualizada'}</span>
+            </div>
+            <p class="font-extrabold text-slate-900">${m.assunto}</p>
+            <p class="text-slate-600 mt-0.5">${m.mensagem_texto}</p>
+          </div>`;
+      }).join('') : '<p class="text-sm text-slate-400">Nenhuma mensagem.</p>';
+    }
+    async function marcarLidaAdm(id) {
+      await db.from('mensagens').update({ visualizada: true, data_visualizacao: new Date().toISOString() }).eq('id', id);
+      carregarMensagensAdm();
+    }
+
+    async function carregarUsuariosAdm() {
+      const { data } = await db.from('usuarios').select('*').order('criado_em', { ascending: false });
+      const lista = data || [];
+      document.getElementById('kpi-usuarios').innerText = lista.length;
+      document.getElementById('datalist-perfis-adm').innerHTML = lista.map(u => `<option value="${u.nome_perfil}">${u.nome_completo}</option>`).join('');
+
+      document.getElementById('tabela-usuarios-adm').innerHTML = lista.map(u => `
+        <tr>
+          <td class="px-5 py-3.5 font-bold text-slate-900">${u.nome_completo}</td>
+          <td class="px-5 py-3.5 text-slate-600">@${u.nome_perfil}</td>
+          <td class="px-5 py-3.5"><span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${u.perfil === 'ADMIN' ? 'bg-amber-100 text-amber-800' : 'bg-blue-50 text-blue-700'}">${u.perfil}</span></td>
+          <td class="px-5 py-3.5"><span class="text-xs font-bold ${u.status === 'ATIVO' ? 'text-emerald-600' : 'text-red-600'}">${u.status}</span></td>
+          <td class="px-5 py-3.5 text-right">
+            ${u.nome_perfil !== admin.perfilNome ? `
+              <button onclick="alternarStatusUsuario('${u.id}', '${u.status}')" class="text-xs font-bold px-3 py-1 rounded-lg border border-slate-200 hover:bg-slate-50 cursor-pointer">
+                ${u.status === 'ATIVO' ? 'Bloquear' : 'Ativar'}
+              </button>` : '<span class="text-xs text-slate-400">Você</span>'}
+          </td>
+        </tr>`).join('');
+    }
+
+    async function alternarStatusUsuario(id, statusAtual) {
+      const novo = statusAtual === 'ATIVO' ? 'BLOQUEADO' : 'ATIVO';
+      await db.from('usuarios').update({ status: novo }).eq('id', id);
+      toast(`Status atualizado para ${novo}`);
+      carregarUsuariosAdm();
+    }
+  </script>
+</body>
+</html>
