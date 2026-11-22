@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sinalário Libras • Central Administrativa</title>
+  <title>Comunidade Acervo em LIBRAS • Biblioteca & Comunidade (ADM)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./config.js"></script>
@@ -47,25 +47,36 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- TELA 1: LOGIN EXCLUSIVO ADMINISTRADOR                                   -->
+  <!-- TELA 1: LOGIN E CADASTRO DE ADMINISTRADOR (COM FILTRO DE SENHA SEGURA)  -->
   <!-- ======================================================================= -->
   <section id="tela-auth" class="flex-1 flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#064e51] via-[#043e40] to-[#011b1c]">
     <div class="w-full max-w-md bg-[#022a2c]/95 backdrop-blur-md border border-teal-800/50 text-white rounded-3xl shadow-2xl overflow-hidden fade-in">
-      <div class="p-8 pb-6 text-center border-b border-teal-900/60 relative">
+      <div class="p-7 pb-6 text-center border-b border-teal-900/60 relative">
         <!-- Emblema Circular com Borda Gradiente -->
-        <div class="w-20 h-20 mx-auto mb-4 rounded-full p-[3px] ring-vibrante shadow-xl">
+        <div class="w-20 h-20 mx-auto mb-3.5 rounded-full p-[3px] ring-vibrante shadow-xl">
           <div class="w-full h-full rounded-full bg-[#043e40] flex items-center justify-center text-white text-2xl">
             <i class="fa-solid fa-hands-asl-interpreting"></i>
           </div>
         </div>
-        <span class="inline-block px-3.5 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-extrabold uppercase tracking-widest text-amber-300">
-          Acesso Restrito • Gestão
+        <span class="inline-block px-3.5 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-extrabold uppercase tracking-widest text-amber-300">
+          Gestão Administrativa
         </span>
-        <h1 class="text-2xl font-extrabold text-white mt-2.5 tracking-tight">Sinalário Libras ADM</h1>
-        <p class="text-xs text-teal-200/75 mt-1">Curadoria de Sinais, Comentários, Sugestões e Comunidade</p>
+        <h1 class="text-xl sm:text-2xl font-extrabold text-white mt-2 tracking-tight">Comunidade Acervo em LIBRAS</h1>
+        <p class="text-xs text-teal-200/75 mt-1">Biblioteca & Comunidade • Curadoria e Moderação</p>
       </div>
 
-      <form onsubmit="executarLoginAdmin(event)" class="p-8 space-y-5">
+      <!-- Abas Login / Cadastrar Novo ADM -->
+      <div class="grid grid-cols-2 text-xs font-extrabold uppercase tracking-wider border-b border-teal-900/70 bg-[#011b1c]/60">
+        <button id="tab-adm-login" onclick="alternarAuthAdm('LOGIN')" class="py-3.5 text-amber-300 bg-[#022a2c] border-b-2 border-amber-400 cursor-pointer">
+          <i class="fa-solid fa-right-to-bracket mr-1"></i> Entrar
+        </button>
+        <button id="tab-adm-cadastro" onclick="alternarAuthAdm('CADASTRO')" class="py-3.5 text-teal-300/60 hover:text-white cursor-pointer">
+          <i class="fa-solid fa-user-plus mr-1"></i> Cadastrar ADM
+        </button>
+      </div>
+
+      <!-- FORMULÁRIO LOGIN ADM -->
+      <form id="form-adm-login" onsubmit="executarLoginAdmin(event)" class="p-7 space-y-5">
         <div>
           <label class="block text-xs font-bold text-teal-200/80 uppercase tracking-wider mb-1.5">Usuário Administrador</label>
           <div class="relative">
@@ -79,12 +90,71 @@
           <div class="relative">
             <i class="fa-solid fa-lock absolute left-4 top-3.5 text-teal-400/70"></i>
             <input type="password" id="adm-senha" required placeholder="••••••••"
-              class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#011b1c]/80 border border-teal-800/70 text-white placeholder-teal-600 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition" />
+              class="w-full pl-11 pr-11 py-3 rounded-xl bg-[#011b1c]/80 border border-teal-800/70 text-white placeholder-teal-600 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition" />
+            <button type="button" onclick="toggleVisibilidadeSenhaAdm('adm-senha', this)" class="absolute right-3.5 top-3.5 text-teal-400/70 hover:text-white cursor-pointer">
+              <i class="fa-regular fa-eye"></i>
+            </button>
           </div>
         </div>
         <button type="submit"
           class="w-full py-3.5 rounded-xl ring-vibrante hover:opacity-95 text-white font-extrabold shadow-lg shadow-pink-600/20 transition cursor-pointer">
           Entrar no Painel Administrativo
+        </button>
+      </form>
+
+      <!-- FORMULÁRIO CADASTRAR NOVO ADM COM SENHA SEGURA -->
+      <form id="form-adm-cadastro" onsubmit="executarCadastroAdmin(event)" class="p-7 space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-bold text-teal-200/80 uppercase tracking-wider mb-1">Nome Completo do ADM</label>
+          <input type="text" id="cad-adm-nome" required placeholder="Ex: Carlos Eduardo"
+            class="w-full px-4 py-3 rounded-xl bg-[#011b1c]/80 border border-teal-800/70 text-white placeholder-teal-600 focus:ring-2 focus:ring-pink-500 outline-none transition" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-teal-200/80 uppercase tracking-wider mb-1">Login Administrativo (@perfil)</label>
+          <input type="text" id="cad-adm-perfil" required placeholder="ex: carlos.adm (sem espaços)"
+            class="w-full px-4 py-3 rounded-xl bg-[#011b1c]/80 border border-teal-800/70 text-white placeholder-teal-600 focus:ring-2 focus:ring-pink-500 outline-none transition" />
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-teal-200/80 uppercase tracking-wider mb-1">Senha Segura</label>
+          <div class="relative">
+            <input type="password" id="cad-adm-senha" required oninput="validarForcaSenhaAdm()" placeholder="Crie uma senha forte"
+              class="w-full pl-4 pr-11 py-3 rounded-xl bg-[#011b1c]/80 border border-teal-800/70 text-white placeholder-teal-600 focus:ring-2 focus:ring-pink-500 outline-none transition" />
+            <button type="button" onclick="toggleVisibilidadeSenhaAdm('cad-adm-senha', this)" class="absolute right-3.5 top-3.5 text-teal-400/70 hover:text-white cursor-pointer">
+              <i class="fa-regular fa-eye"></i>
+            </button>
+          </div>
+
+          <!-- Barra de Força da Senha -->
+          <div class="mt-2">
+            <div class="flex items-center justify-between text-[11px] font-bold mb-1">
+              <span class="text-teal-300/70">Nível de segurança:</span>
+              <span id="adm-senha-forca-label" class="text-teal-400/60">Aguardando...</span>
+            </div>
+            <div class="w-full h-1.5 bg-teal-950 rounded-full overflow-hidden">
+              <div id="adm-senha-forca-barra" class="h-full w-0 bg-red-500 transition-all duration-300"></div>
+            </div>
+          </div>
+
+          <!-- Requisitos de Senha Segura -->
+          <ul class="mt-2.5 p-3 rounded-xl bg-[#011b1c]/80 border border-teal-800/60 space-y-1 text-[11px] font-semibold">
+            <li id="adm-req-len" class="text-teal-300/60 flex items-center gap-1.5"><i class="fa-regular fa-circle"></i> Mínimo de 8 caracteres</li>
+            <li id="adm-req-upper" class="text-teal-300/60 flex items-center gap-1.5"><i class="fa-regular fa-circle"></i> Pelo menos 1 letra maiúscula (A-Z)</li>
+            <li id="adm-req-lower" class="text-teal-300/60 flex items-center gap-1.5"><i class="fa-regular fa-circle"></i> Pelo menos 1 letra minúscula (a-z)</li>
+            <li id="adm-req-num" class="text-teal-300/60 flex items-center gap-1.5"><i class="fa-regular fa-circle"></i> Pelo menos 1 número (0-9)</li>
+            <li id="adm-req-spec" class="text-teal-300/60 flex items-center gap-1.5"><i class="fa-regular fa-circle"></i> Pelo menos 1 símbolo (!@#$%&*...)</li>
+          </ul>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-teal-200/80 uppercase tracking-wider mb-1">Confirmar Senha</label>
+          <input type="password" id="cad-adm-senha-confirma" required oninput="validarForcaSenhaAdm()" placeholder="Repita a senha"
+            class="w-full px-4 py-3 rounded-xl bg-[#011b1c]/80 border border-teal-800/70 text-white placeholder-teal-600 focus:ring-2 focus:ring-pink-500 outline-none transition" />
+          <p id="adm-msg-confirma-senha" class="hidden text-[11px] font-bold text-red-400 mt-1">As senhas não coincidem.</p>
+        </div>
+
+        <button type="submit"
+          class="w-full py-3.5 rounded-xl ring-vibrante hover:opacity-95 text-white font-extrabold shadow-lg transition cursor-pointer">
+          Cadastrar Novo Administrador
         </button>
       </form>
     </div>
@@ -110,8 +180,8 @@
               </div>
             </div>
             <div>
-              <span class="font-extrabold text-white text-base leading-none block">Sinalário</span>
-              <span class="text-[10px] font-bold uppercase tracking-widest text-amber-300">Painel ADM</span>
+              <span class="font-extrabold text-white text-sm leading-tight block">Comunidade</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-300">Acervo em LIBRAS • ADM</span>
             </div>
           </div>
           <button onclick="toggleMenuMobile(false)" class="lg:hidden text-teal-300 hover:text-white text-xl">
@@ -179,7 +249,7 @@
           <button onclick="toggleMenuMobile(true)" class="lg:hidden p-2 rounded-xl text-[#043e40] hover:bg-teal-50">
             <i class="fa-solid fa-bars text-lg"></i>
           </button>
-          <h2 id="titulo-pagina-atual" class="font-extrabold text-[#043e40] text-base sm:text-lg">Acervo Oficial de Sinais</h2>
+          <h2 id="titulo-pagina-atual" class="font-extrabold text-[#043e40] text-base sm:text-lg">Comunidade Acervo em LIBRAS • Biblioteca & Comunidade</h2>
         </div>
 
         <button onclick="atualizarTudo()" title="Sincronizar dados"
@@ -561,7 +631,7 @@
     let filtroSubAdm = null;
 
     const TITULOS_ABAS = {
-      sinais: 'Acervo Oficial de Sinais',
+      sinais: 'Comunidade Acervo em LIBRAS • Biblioteca & Comunidade',
       comentarios: 'Comentários nos Vídeos e Sinais',
       sugestoes: 'Sugestões dos Usuários',
       forum: 'Moderação do Fórum',
@@ -570,7 +640,7 @@
     };
 
     window.onload = () => {
-      const salva = sessionStorage.getItem('sinalario_admin');
+      const salva = sessionStorage.getItem('comunidade_libras_admin');
       if (salva) { admin = JSON.parse(salva); iniciarPainel(); }
     };
 
@@ -595,6 +665,124 @@
       document.getElementById('mobile-backdrop').classList.toggle('hidden', !abrir);
     }
 
+    function toggleVisibilidadeSenhaAdm(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const isPass = input.type === 'password';
+      input.type = isPass ? 'text' : 'password';
+      btn.innerHTML = isPass ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
+    }
+
+    function alternarAuthAdm(aba) {
+      const isCad = aba === 'CADASTRO';
+      document.getElementById('form-adm-login').classList.toggle('hidden', isCad);
+      document.getElementById('form-adm-cadastro').classList.toggle('hidden', !isCad);
+      document.getElementById('tab-adm-login').className = !isCad
+        ? 'py-3.5 text-amber-300 bg-[#022a2c] border-b-2 border-amber-400 cursor-pointer'
+        : 'py-3.5 text-teal-300/60 hover:text-white cursor-pointer';
+      document.getElementById('tab-adm-cadastro').className = isCad
+        ? 'py-3.5 text-amber-300 bg-[#022a2c] border-b-2 border-amber-400 cursor-pointer'
+        : 'py-3.5 text-teal-300/60 hover:text-white cursor-pointer';
+    }
+
+    // --- VALIDAÇÃO DE SENHA SEGURA PARA NOVO ADM ---
+    function checarCriteriosSenhaAdm(senha) {
+      return {
+        len: senha.length >= 8,
+        upper: /[A-Z]/.test(senha),
+        lower: /[a-z]/.test(senha),
+        num: /[0-9]/.test(senha),
+        spec: /[^A-Za-z0-9]/.test(senha)
+      };
+    }
+
+    function atualizarItemRequisitoAdm(id, ok) {
+      const el = document.getElementById(id);
+      const icon = el.querySelector('i');
+      if (ok) {
+        el.className = 'text-emerald-400 flex items-center gap-1.5';
+        icon.className = 'fa-solid fa-circle-check';
+      } else {
+        el.className = 'text-teal-300/60 flex items-center gap-1.5';
+        icon.className = 'fa-regular fa-circle';
+      }
+    }
+
+    function validarForcaSenhaAdm() {
+      const senha = document.getElementById('cad-adm-senha').value;
+      const confirma = document.getElementById('cad-adm-senha-confirma').value;
+      const c = checarCriteriosSenhaAdm(senha);
+
+      atualizarItemRequisitoAdm('adm-req-len', c.len);
+      atualizarItemRequisitoAdm('adm-req-upper', c.upper);
+      atualizarItemRequisitoAdm('adm-req-lower', c.lower);
+      atualizarItemRequisitoAdm('adm-req-num', c.num);
+      atualizarItemRequisitoAdm('adm-req-spec', c.spec);
+
+      const pontos = Object.values(c).filter(Boolean).length;
+      const barra = document.getElementById('adm-senha-forca-barra');
+      const label = document.getElementById('adm-senha-forca-label');
+
+      if (!senha) {
+        barra.style.width = '0%';
+        label.innerText = 'Aguardando...';
+        label.className = 'text-teal-400/60';
+      } else if (pontos <= 2) {
+        barra.style.width = '30%';
+        barra.className = 'h-full bg-red-500 transition-all duration-300';
+        label.innerText = 'Fraca';
+        label.className = 'text-red-400';
+      } else if (pontos <= 4) {
+        barra.style.width = '70%';
+        barra.className = 'h-full bg-amber-400 transition-all duration-300';
+        label.innerText = 'Média';
+        label.className = 'text-amber-300';
+      } else {
+        barra.style.width = '100%';
+        barra.className = 'h-full bg-emerald-400 transition-all duration-300';
+        label.innerText = 'Forte e Segura';
+        label.className = 'text-emerald-400';
+      }
+
+      const msgConf = document.getElementById('adm-msg-confirma-senha');
+      msgConf.classList.toggle('hidden', !confirma || senha === confirma);
+    }
+
+    async function executarCadastroAdmin(e) {
+      e.preventDefault();
+      const nome = document.getElementById('cad-adm-nome').value;
+      const perfil = document.getElementById('cad-adm-perfil').value;
+      const senha = document.getElementById('cad-adm-senha').value;
+      const confirma = document.getElementById('cad-adm-senha-confirma').value;
+      const criterios = checarCriteriosSenhaAdm(senha);
+
+      if (/\s/.test(perfil.trim())) {
+        return toast('O login administrativo não pode conter espaços.', true);
+      }
+      if (!Object.values(criterios).every(Boolean)) {
+        return toast('A senha deve atender a todos os requisitos de segurança.', true);
+      }
+      if (senha !== confirma) {
+        return toast('As senhas digitadas não coincidem.', true);
+      }
+
+      showLoader('Cadastrando novo administrador...');
+      const { data, error } = await db.rpc('registrar_admin', {
+        p_nome_completo: nome,
+        p_nome_perfil: perfil,
+        p_senha: senha
+      });
+      hideLoader();
+
+      if (error) return toast('Erro ao cadastrar ADM: ' + error.message, true);
+      if (!data.sucesso) return toast(data.mensagem, true);
+
+      toast(data.mensagem);
+      document.getElementById('form-adm-cadastro').reset();
+      validarForcaSenhaAdm();
+      alternarAuthAdm('LOGIN');
+      document.getElementById('adm-perfil').value = perfil.replace(/^@/, '').trim().toLowerCase();
+    }
+
     async function executarLoginAdmin(e) {
       e.preventDefault();
       showLoader('Autenticando Administrador...');
@@ -608,12 +796,12 @@
       if (!data.sucesso) return toast(data.mensagem, true);
 
       admin = data.usuario;
-      sessionStorage.setItem('sinalario_admin', JSON.stringify(admin));
+      sessionStorage.setItem('comunidade_libras_admin', JSON.stringify(admin));
       iniciarPainel();
     }
 
     function sair() {
-      sessionStorage.removeItem('sinalario_admin');
+      sessionStorage.removeItem('comunidade_libras_admin');
       admin = null;
       document.getElementById('tela-app').classList.add('hidden');
       document.getElementById('tela-auth').classList.remove('hidden');
@@ -1100,7 +1288,7 @@
       carregarComentarios();
     }
 
-    // --- 4. SUGESTÕES ---
+    // --- 4. SUGESTÕES (SUPORTA MÚLTIPLOS ANEXOS DO USUÁRIO) ---
     async function carregarSugestoes() {
       const { data } = await db.from('sugestoes').select('*').order('data_envio', { ascending: false });
       const lista = data || [];
@@ -1110,17 +1298,21 @@
       badge.innerText = emAnalise;
       badge.classList.toggle('hidden', emAnalise === 0);
 
-      document.getElementById('lista-sugestoes-adm').innerHTML = lista.length ? lista.map(s => `
+      document.getElementById('lista-sugestoes-adm').innerHTML = lista.length ? lista.map(s => {
+        const midias = obterTodasMidiasSinal(s);
+        return `
         <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50/70">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <span class="text-xs font-bold text-slate-600">@${s.usuario_perfil} • ${s.categoria_sugerida} › ${s.subcategoria_sugerida} (${s.tipo_midia})</span>
+            <span class="text-xs font-bold text-slate-600">@${s.usuario_perfil} • ${s.categoria_sugerida} › ${s.subcategoria_sugerida} • ${midias.length} anexo(s)</span>
             <span class="text-[11px] font-extrabold px-3 py-0.5 rounded-full ${s.status_sugestao === 'FINALIZADO' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
               ${s.status_sugestao}
             </span>
           </div>
           <h4 class="font-extrabold text-slate-900 text-base">${s.titulo_sinal}</h4>
           <p class="text-sm text-slate-600 my-2">${s.texto_sugestao}</p>
-          ${renderMidiaCard(s.tipo_midia, s.url_midia)}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-2">
+            ${midias.map(m => renderMidiaCard(m.tipo, m.url)).join('')}
+          </div>
           ${s.status_sugestao === 'EM ANALISE' ? `
             <div class="mt-4 pt-3 border-t border-slate-200 space-y-2.5">
               <input type="text" id="resp-sug-${s.id}" placeholder="Resposta oficial do ADM para o usuário..."
@@ -1136,7 +1328,8 @@
                 </button>
               </div>
             </div>` : `<p class="text-xs text-slate-600 mt-3 p-2.5 rounded-xl bg-white border border-slate-200"><strong>Resposta ADM (@${s.avaliado_por_adm}):</strong> ${s.resposta_adm || 'Finalizado.'}</p>`}
-        </div>`).join('') : '<p class="text-sm text-slate-400 text-center py-6">Nenhuma sugestão enviada.</p>';
+        </div>`;
+      }).join('') : '<p class="text-sm text-slate-400 text-center py-6">Nenhuma sugestão enviada.</p>';
     }
 
     async function finalizarSugestao(s, publicar) {
@@ -1159,6 +1352,7 @@
           tipo_midia: s.tipo_midia,
           url_midia: s.url_midia,
           storage_path: s.storage_path,
+          midias_extras: Array.isArray(s.midias_extras) ? s.midias_extras : [],
           editado_por: admin.perfilNome
         });
         carregarSinais();
