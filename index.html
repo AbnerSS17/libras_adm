@@ -11,24 +11,37 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
   <style>
-    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background-color: #f8fafc; }
+    body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background-color: #f3f6f6; }
     .fade-in { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    /* Scrollbar refinada */
+    /* Paleta Institucional Verde Petróleo + Gradiente Vibrante */
+    .bg-petroleo { background-color: #043e40; }
+    .bg-petroleo-dark { background-color: #022a2c; }
+    .text-petroleo { color: #043e40; }
+    .border-petroleo { border-color: #043e40; }
+    .ring-vibrante {
+      background: linear-gradient(135deg, #f59e0b, #ef4444, #ec4899, #9333ea);
+    }
+    .btn-vibrante {
+      background: linear-gradient(135deg, #043e40 0%, #07595c 100%);
+    }
+    .btn-vibrante:hover {
+      background: linear-gradient(135deg, #064e51 0%, #096c70 100%);
+    }
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
   </style>
 </head>
-<body class="text-slate-800 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
+<body class="text-slate-800 min-h-screen flex flex-col antialiased selection:bg-[#043e40] selection:text-white">
 
   <!-- TOAST DE NOTIFICAÇÃO -->
-  <div id="toast" class="fixed bottom-5 right-5 z-50 hidden max-w-sm px-5 py-3.5 rounded-2xl shadow-2xl text-white font-semibold text-sm flex items-center gap-3 fade-in"></div>
+  <div id="toast" class="fixed bottom-5 right-5 z-[60] hidden max-w-sm px-5 py-3.5 rounded-2xl shadow-2xl text-white font-semibold text-sm flex items-center gap-3 fade-in"></div>
 
   <!-- LOADER GLOBAL -->
-  <div id="loader" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center">
-    <div class="bg-slate-900 border border-slate-800 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3.5">
-      <div class="w-6 h-6 border-3 border-amber-400 border-t-transparent rounded-full animate-spin"></div>
+  <div id="loader" class="fixed inset-0 bg-slate-950/65 backdrop-blur-xs z-[60] hidden flex items-center justify-center">
+    <div class="bg-[#022a2c] border border-teal-800/60 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3.5">
+      <div class="w-6 h-6 border-3 border-pink-500 border-t-amber-400 rounded-full animate-spin"></div>
       <span id="loader-text" class="font-semibold text-sm">Processando...</span>
     </div>
   </div>
@@ -36,38 +49,41 @@
   <!-- ======================================================================= -->
   <!-- TELA 1: LOGIN EXCLUSIVO ADMINISTRADOR                                   -->
   <!-- ======================================================================= -->
-  <section id="tela-auth" class="flex-1 flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black">
-    <div class="w-full max-w-md bg-slate-900/90 backdrop-blur-md border border-slate-800/80 text-white rounded-3xl shadow-2xl overflow-hidden fade-in">
-      <div class="p-8 pb-6 text-center border-b border-slate-800/80 relative">
-        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center text-3xl shadow-lg shadow-amber-500/20">
-          <i class="fa-solid fa-shield-halved"></i>
+  <section id="tela-auth" class="flex-1 flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#064e51] via-[#043e40] to-[#011b1c]">
+    <div class="w-full max-w-md bg-[#022a2c]/95 backdrop-blur-md border border-teal-800/50 text-white rounded-3xl shadow-2xl overflow-hidden fade-in">
+      <div class="p-8 pb-6 text-center border-b border-teal-900/60 relative">
+        <!-- Emblema Circular com Borda Gradiente -->
+        <div class="w-20 h-20 mx-auto mb-4 rounded-full p-[3px] ring-vibrante shadow-xl">
+          <div class="w-full h-full rounded-full bg-[#043e40] flex items-center justify-center text-white text-2xl">
+            <i class="fa-solid fa-hands-asl-interpreting"></i>
+          </div>
         </div>
-        <span class="inline-block px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-[11px] font-extrabold uppercase tracking-widest text-amber-400">
+        <span class="inline-block px-3.5 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-extrabold uppercase tracking-widest text-amber-300">
           Acesso Restrito • Gestão
         </span>
-        <h1 class="text-2xl font-extrabold text-white mt-2 tracking-tight">Sinalário Libras ADM</h1>
-        <p class="text-xs text-slate-400 mt-1">Curadoria de Sinais, Comentários, Sugestões e Comunidade</p>
+        <h1 class="text-2xl font-extrabold text-white mt-2.5 tracking-tight">Sinalário Libras ADM</h1>
+        <p class="text-xs text-teal-200/75 mt-1">Curadoria de Sinais, Comentários, Sugestões e Comunidade</p>
       </div>
 
       <form onsubmit="executarLoginAdmin(event)" class="p-8 space-y-5">
         <div>
-          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Usuário Administrador</label>
+          <label class="block text-xs font-bold text-teal-200/80 uppercase tracking-wider mb-1.5">Usuário Administrador</label>
           <div class="relative">
-            <i class="fa-solid fa-user-shield absolute left-4 top-3.5 text-slate-500"></i>
+            <i class="fa-solid fa-user-shield absolute left-4 top-3.5 text-teal-400/70"></i>
             <input type="text" id="adm-perfil" required placeholder="admin"
-              class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-600 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+              class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#011b1c]/80 border border-teal-800/70 text-white placeholder-teal-600 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition" />
           </div>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">Senha de Acesso</label>
+          <label class="block text-xs font-bold text-teal-200/80 uppercase tracking-wider mb-1.5">Senha de Acesso</label>
           <div class="relative">
-            <i class="fa-solid fa-lock absolute left-4 top-3.5 text-slate-500"></i>
+            <i class="fa-solid fa-lock absolute left-4 top-3.5 text-teal-400/70"></i>
             <input type="password" id="adm-senha" required placeholder="••••••••"
-              class="w-full pl-11 pr-4 py-3 rounded-xl bg-slate-950/70 border border-slate-800 text-white placeholder-slate-600 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition" />
+              class="w-full pl-11 pr-4 py-3 rounded-xl bg-[#011b1c]/80 border border-teal-800/70 text-white placeholder-teal-600 focus:ring-2 focus:ring-pink-500 focus:border-pink-500 outline-none transition" />
           </div>
         </div>
         <button type="submit"
-          class="w-full py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-extrabold shadow-lg shadow-amber-500/20 transition cursor-pointer">
+          class="w-full py-3.5 rounded-xl ring-vibrante hover:opacity-95 text-white font-extrabold shadow-lg shadow-pink-600/20 transition cursor-pointer">
           Entrar no Painel Administrativo
         </button>
       </form>
@@ -82,21 +98,23 @@
     <!-- BACKDROP MENU MOBILE -->
     <div id="mobile-backdrop" onclick="toggleMenuMobile(false)" class="fixed inset-0 bg-slate-950/60 z-30 hidden lg:hidden"></div>
 
-    <!-- SIDEBAR LATERAL (FIXA NO DESKTOP, GAVETA NO MOBILE/TABLET) -->
-    <aside id="sidebar" class="fixed lg:sticky top-0 left-0 z-40 h-screen w-72 bg-slate-950 text-slate-300 flex flex-col justify-between transition-transform duration-300 -translate-x-full lg:translate-x-0 border-r border-slate-900 shrink-0">
+    <!-- SIDEBAR LATERAL (VERDE PETRÓLEO) -->
+    <aside id="sidebar" class="fixed lg:sticky top-0 left-0 z-40 h-screen w-72 bg-[#022a2c] text-teal-100/80 flex flex-col justify-between transition-transform duration-300 -translate-x-full lg:translate-x-0 border-r border-teal-900/50 shrink-0">
       <div>
         <!-- Marca -->
-        <div class="h-16 px-6 flex items-center justify-between border-b border-slate-900">
+        <div class="h-16 px-6 flex items-center justify-between border-b border-teal-900/60">
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center font-extrabold shadow-sm">
-              <i class="fa-solid fa-hands-asl-interpreting"></i>
+            <div class="w-10 h-10 rounded-full p-[2px] ring-vibrante shrink-0">
+              <div class="w-full h-full rounded-full bg-[#043e40] text-white flex items-center justify-center text-sm font-extrabold">
+                <i class="fa-solid fa-hands-asl-interpreting"></i>
+              </div>
             </div>
             <div>
               <span class="font-extrabold text-white text-base leading-none block">Sinalário</span>
-              <span class="text-[10px] font-bold uppercase tracking-widest text-amber-400">Painel ADM</span>
+              <span class="text-[10px] font-bold uppercase tracking-widest text-amber-300">Painel ADM</span>
             </div>
           </div>
-          <button onclick="toggleMenuMobile(false)" class="lg:hidden text-slate-400 hover:text-white text-xl">
+          <button onclick="toggleMenuMobile(false)" class="lg:hidden text-teal-300 hover:text-white text-xl">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
@@ -104,48 +122,48 @@
         <!-- Links de Navegação -->
         <nav class="p-4 space-y-1.5">
           <button onclick="mudarAba('sinais')" id="nav-sinais"
-            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold bg-amber-500 text-slate-950 transition cursor-pointer">
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold ring-vibrante text-white shadow-md transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-photo-film w-4"></i> Acervo de Sinais</span>
           </button>
 
           <button onclick="mudarAba('comentarios')" id="nav-comentarios"
-            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer">
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-teal-200/75 hover:bg-[#043e40] hover:text-white transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-comment-dots w-4"></i> Comentários</span>
-            <span id="badge-com" class="hidden px-2 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-extrabold">0</span>
+            <span id="badge-com" class="hidden px-2 py-0.5 rounded-full bg-pink-600 text-white text-[10px] font-extrabold">0</span>
           </button>
 
           <button onclick="mudarAba('sugestoes')" id="nav-sugestoes"
-            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer">
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-teal-200/75 hover:bg-[#043e40] hover:text-white transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-lightbulb w-4"></i> Sugestões</span>
-            <span id="badge-sug" class="hidden px-2 py-0.5 rounded-full bg-amber-500 text-slate-950 text-[10px] font-extrabold">0</span>
+            <span id="badge-sug" class="hidden px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-extrabold">0</span>
           </button>
 
           <button onclick="mudarAba('forum')" id="nav-forum"
-            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer">
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-teal-200/75 hover:bg-[#043e40] hover:text-white transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-comments w-4"></i> Fórum</span>
           </button>
 
           <button onclick="mudarAba('mensagens')" id="nav-mensagens"
-            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer">
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-teal-200/75 hover:bg-[#043e40] hover:text-white transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-envelope w-4"></i> Mensagens</span>
-            <span id="badge-msg" class="hidden px-2 py-0.5 rounded-full bg-indigo-500 text-white text-[10px] font-extrabold">0</span>
+            <span id="badge-msg" class="hidden px-2 py-0.5 rounded-full bg-purple-500 text-white text-[10px] font-extrabold">0</span>
           </button>
 
           <button onclick="mudarAba('usuarios')" id="nav-usuarios"
-            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer">
+            class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-teal-200/75 hover:bg-[#043e40] hover:text-white transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-users-gear w-4"></i> Usuários</span>
           </button>
         </nav>
       </div>
 
       <!-- Rodapé Perfil ADM -->
-      <div class="p-4 border-t border-slate-900">
-        <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-2xl">
+      <div class="p-4 border-t border-teal-900/60">
+        <div class="flex items-center justify-between bg-[#043e40]/80 p-3 rounded-2xl border border-teal-800/40">
           <div class="min-w-0">
             <p id="sidebar-adm-nome" class="text-xs font-bold text-white truncate"></p>
-            <p id="sidebar-adm-perfil" class="text-[11px] text-amber-400 truncate"></p>
+            <p id="sidebar-adm-perfil" class="text-[11px] text-amber-300 truncate"></p>
           </div>
-          <button onclick="sair()" title="Sair do sistema" class="p-2 rounded-xl text-slate-400 hover:text-red-400 hover:bg-slate-800 transition cursor-pointer">
+          <button onclick="sair()" title="Sair do sistema" class="p-2 rounded-xl text-teal-200 hover:text-pink-400 hover:bg-[#022a2c] transition cursor-pointer">
             <i class="fa-solid fa-right-from-bracket"></i>
           </button>
         </div>
@@ -155,17 +173,17 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <div class="flex-1 flex flex-col min-w-0">
 
-      <!-- TOPBAR MOBILE / TABLET & INDICADORES -->
-      <header class="bg-white border-b border-slate-200 sticky top-0 z-20 px-4 sm:px-8 h-16 flex items-center justify-between">
+      <!-- TOPBAR -->
+      <header class="bg-white border-b border-slate-200/90 sticky top-0 z-20 px-4 sm:px-8 h-16 flex items-center justify-between">
         <div class="flex items-center gap-3">
-          <button onclick="toggleMenuMobile(true)" class="lg:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100">
+          <button onclick="toggleMenuMobile(true)" class="lg:hidden p-2 rounded-xl text-[#043e40] hover:bg-teal-50">
             <i class="fa-solid fa-bars text-lg"></i>
           </button>
-          <h2 id="titulo-pagina-atual" class="font-extrabold text-slate-900 text-base sm:text-lg">Acervo Oficial de Sinais</h2>
+          <h2 id="titulo-pagina-atual" class="font-extrabold text-[#043e40] text-base sm:text-lg">Acervo Oficial de Sinais</h2>
         </div>
 
         <button onclick="atualizarTudo()" title="Sincronizar dados"
-          class="px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-600 flex items-center gap-2 cursor-pointer">
+          class="px-3.5 py-2 rounded-xl border border-teal-900/15 bg-teal-50/50 hover:bg-teal-50 text-xs font-bold text-[#043e40] flex items-center gap-2 cursor-pointer">
           <i class="fa-solid fa-rotate"></i> <span class="hidden sm:inline">Atualizar</span>
         </button>
       </header>
@@ -174,17 +192,17 @@
       <div class="max-w-7xl w-full mx-auto px-4 sm:px-8 pt-6">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shrink-0">
+            <div class="w-11 h-11 rounded-xl bg-[#043e40]/10 text-[#043e40] flex items-center justify-center text-lg shrink-0">
               <i class="fa-solid fa-hands"></i>
             </div>
             <div>
               <p class="text-[11px] font-bold uppercase text-slate-400">Sinais Ativos</p>
-              <p id="kpi-sinais" class="text-xl font-extrabold text-slate-900">0</p>
+              <p id="kpi-sinais" class="text-xl font-extrabold text-[#043e40]">0</p>
             </div>
           </div>
 
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center text-lg shrink-0">
+            <div class="w-11 h-11 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center text-lg shrink-0">
               <i class="fa-solid fa-comment-dots"></i>
             </div>
             <div>
@@ -194,7 +212,7 @@
           </div>
 
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg shrink-0">
+            <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shrink-0">
               <i class="fa-solid fa-lightbulb"></i>
             </div>
             <div>
@@ -204,7 +222,7 @@
           </div>
 
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
-            <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0">
+            <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg shrink-0">
               <i class="fa-solid fa-users"></i>
             </div>
             <div>
@@ -226,15 +244,15 @@
               <div class="relative flex-1">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
                 <input type="text" id="busca-adm" oninput="renderizarSinaisAdm()" placeholder="Pesquisar sinal por título ou descrição..."
-                  class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white text-sm outline-none focus:ring-2 focus:ring-amber-500" />
+                  class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white text-sm outline-none focus:ring-2 focus:ring-[#043e40]" />
               </div>
               <div class="flex gap-2">
                 <button id="btn-limpar-cat" onclick="filtrarPorCategoriaAdm(null, null)"
                   class="hidden px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer">
                   Todos
                 </button>
-                <button onclick="abrirModalSinal()"
-                  class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 text-sm font-extrabold shadow-sm flex items-center justify-center gap-2 cursor-pointer">
+                <button onclick="abrirModalNovoSinal()"
+                  class="px-4 py-2.5 rounded-xl btn-vibrante text-white text-sm font-extrabold shadow-sm flex items-center justify-center gap-2 cursor-pointer">
                   <i class="fa-solid fa-plus"></i> Novo Sinal
                 </button>
               </div>
@@ -243,20 +261,20 @@
             <div id="grid-sinais-adm" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
           </div>
 
-          <!-- Painel Direito de Categorias e Subcategorias -->
+          <!-- Painel Direito de Categorias e Subcategorias (COM EXCLUSÃO) -->
           <aside class="w-full xl:w-80 shrink-0">
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sticky top-20">
               <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
-                <h3 class="font-extrabold text-slate-800 flex items-center gap-2">
-                  <i class="fa-solid fa-folder-tree text-amber-500"></i> Categorias
+                <h3 class="font-extrabold text-[#043e40] flex items-center gap-2">
+                  <i class="fa-solid fa-folder-tree text-pink-600"></i> Categorias
                 </h3>
                 <button onclick="abrirModalCategoria()"
-                  class="text-xs font-extrabold px-3 py-1.5 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-950 transition cursor-pointer">
+                  class="text-xs font-extrabold px-3 py-1.5 rounded-xl ring-vibrante text-white shadow-xs transition cursor-pointer">
                   + Nova
                 </button>
               </div>
               <button onclick="filtrarPorCategoriaAdm(null, null)"
-                class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 mb-3 cursor-pointer">
+                class="w-full text-left px-3.5 py-2 rounded-xl text-xs font-bold text-[#043e40] bg-[#043e40]/10 hover:bg-[#043e40]/15 mb-3 cursor-pointer">
                 Todas as Categorias
               </button>
               <div id="lista-cats-adm" class="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1"></div>
@@ -271,7 +289,7 @@
       <main id="sec-comentarios" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
         <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
           <div class="mb-5 pb-3 border-b border-slate-100">
-            <h3 class="text-lg font-extrabold text-slate-900">Comentários nos Vídeos e Sinais</h3>
+            <h3 class="text-lg font-extrabold text-[#043e40]">Comentários nos Vídeos e Sinais</h3>
             <p class="text-xs text-slate-500">Feedbacks enviados pelos usuários indicando o nome do sinal comentado.</p>
           </div>
           <div id="lista-comentarios-adm" class="space-y-4"></div>
@@ -284,7 +302,7 @@
       <main id="sec-sugestoes" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
         <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
           <div class="mb-5 pb-3 border-b border-slate-100">
-            <h3 class="text-lg font-extrabold text-slate-900">Sugestões de Conteúdo (Texto, Vídeo, Imagem e GIF)</h3>
+            <h3 class="text-lg font-extrabold text-[#043e40]">Sugestões de Conteúdo (Texto, Vídeo, Imagem e GIF)</h3>
             <p class="text-xs text-slate-500">Analise as mídias sugeridas, envie uma resposta oficial e finalize ou publique na biblioteca.</p>
           </div>
           <div id="lista-sugestoes-adm" class="space-y-4"></div>
@@ -304,7 +322,7 @@
       <main id="sec-mensagens" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs h-fit">
-            <h3 class="font-extrabold text-slate-800 mb-3">Enviar Comunicado</h3>
+            <h3 class="font-extrabold text-[#043e40] mb-3">Enviar Comunicado</h3>
             <form onsubmit="enviarMensagemAdm(event)" class="space-y-3">
               <input type="text" id="adm-msg-dest" list="datalist-perfis-adm" required placeholder="Para (@perfil)"
                 class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none" />
@@ -313,13 +331,13 @@
                 class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none" />
               <textarea id="adm-msg-texto" rows="4" required placeholder="Escreva sua mensagem..."
                 class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none"></textarea>
-              <button type="submit" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-sm cursor-pointer">
+              <button type="submit" class="w-full py-2.5 rounded-xl btn-vibrante text-white font-bold text-sm cursor-pointer">
                 Enviar Mensagem
               </button>
             </form>
           </div>
           <div class="md:col-span-2 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs">
-            <h3 class="font-extrabold text-slate-800 mb-3 pb-2 border-b border-slate-100">Caixa de Mensagens</h3>
+            <h3 class="font-extrabold text-[#043e40] mb-3 pb-2 border-b border-slate-100">Caixa de Mensagens</h3>
             <div id="lista-msg-adm" class="space-y-3"></div>
           </div>
         </div>
@@ -331,7 +349,7 @@
       <main id="sec-usuarios" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
           <div class="p-5 border-b border-slate-100">
-            <h3 class="font-extrabold text-slate-900">Usuários Cadastrados</h3>
+            <h3 class="font-extrabold text-[#043e40]">Usuários Cadastrados</h3>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
@@ -354,62 +372,144 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL: CADASTRAR / EDITAR SINAL OFICIAL                                 -->
+  <!-- MODAL 1: VISUALIZAÇÃO AMPLIADA DO SINAL (MAIOR PORCENTAGEM DA TELA)     -->
+  <!--          PERMITE VER TUDO, EDITAR TEXTO E ADICIONAR + VÍDEOS/FOTOS/GIFS -->
   <!-- ======================================================================= -->
-  <div id="modal-sinal" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto fade-in">
-      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-        <h3 id="modal-sinal-titulo" class="text-lg font-extrabold text-slate-900">Novo Sinal Oficial</h3>
-        <button onclick="fecharModal('modal-sinal')" class="text-2xl text-slate-400 hover:text-slate-700">&times;</button>
-      </div>
-      <form onsubmit="salvarSinal(event)" class="space-y-4">
-        <input type="hidden" id="sinal-id" />
-        <input type="hidden" id="sinal-url-atual" />
-        <input type="hidden" id="sinal-path-atual" />
+  <div id="modal-detalhe-sinal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4">
+    <div class="bg-white rounded-3xl w-[96vw] h-[94vh] max-w-[1600px] shadow-2xl flex flex-col overflow-hidden fade-in border border-teal-900/20">
 
+      <!-- Cabeçalho Verde Petróleo -->
+      <div class="bg-[#043e40] text-white px-5 sm:px-8 py-4 flex items-center justify-between gap-4 shrink-0">
+        <div class="min-w-0">
+          <span id="det-categoria-badge" class="inline-block text-[11px] font-extrabold uppercase tracking-wider px-3 py-0.5 rounded-full bg-white/15 text-amber-300 mb-1"></span>
+          <h2 id="det-titulo" class="text-xl sm:text-2xl font-extrabold truncate"></h2>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button onclick="excluirSinalAtual()" class="px-3.5 py-2 rounded-xl bg-red-500/20 hover:bg-red-500 text-red-100 hover:text-white text-xs font-bold transition cursor-pointer">
+            <i class="fa-solid fa-trash mr-1"></i> <span class="hidden sm:inline">Excluir Sinal</span>
+          </button>
+          <button onclick="fecharModal('modal-detalhe-sinal')" class="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 text-white text-2xl flex items-center justify-center cursor-pointer">
+            &times;
+          </button>
+        </div>
+      </div>
+
+      <!-- Corpo Dividido: Esquerda (Galeria Ampliada de Vídeos/Imagens/GIFs) | Direita (Edição de Texto e Upload de + Mídias) -->
+      <div class="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-12">
+
+        <!-- COLUNA ESQUERDA (7/12): GALERIA DE VÍDEOS, IMAGENS E GIFS -->
+        <div class="lg:col-span-7 bg-slate-950 p-4 sm:p-6 flex flex-col gap-5 overflow-y-auto">
+          <div class="flex items-center justify-between text-white">
+            <h3 class="text-sm font-extrabold uppercase tracking-wider text-teal-200">
+              <i class="fa-solid fa-photo-film text-amber-400 mr-1.5"></i> Vídeos, Imagens e GIFs deste Sinal
+            </h3>
+            <span id="det-total-midias" class="text-xs font-bold px-2.5 py-1 rounded-full bg-white/10 text-amber-300"></span>
+          </div>
+
+          <div id="det-galeria-midias" class="space-y-5"></div>
+        </div>
+
+        <!-- COLUNA DIREITA (5/12): TEXTO EXPLICATIVO EDITÁVEL + ADICIONAR NOVAS MÍDIAS -->
+        <div class="lg:col-span-5 bg-white p-5 sm:p-7 flex flex-col justify-between gap-6 overflow-y-auto border-l border-slate-200">
+          <div class="space-y-6">
+            <!-- Formulário Editar Texto, Título e Categoria -->
+            <form onsubmit="salvarEdicaoTextoSinal(event)" class="space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                <h4 class="font-extrabold text-[#043e40] text-sm uppercase tracking-wider">
+                  <i class="fa-solid fa-pen-to-square text-pink-600 mr-1.5"></i> Dados e Explicação do Sinal
+                </h4>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Título do Sinal</label>
+                <input type="text" id="det-edit-titulo" required
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#043e40] outline-none" />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Categoria</label>
+                  <select id="det-edit-cat" onchange="atualizarSubcatsDetalhe()"
+                    class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Subcategoria</label>
+                  <select id="det-edit-subcat"
+                    class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Texto Explicativo Completo</label>
+                <textarea id="det-edit-texto" rows="6" required
+                  class="w-full px-3.5 py-3 rounded-xl border border-slate-300 text-sm leading-relaxed text-slate-800 focus:ring-2 focus:ring-[#043e40] outline-none"></textarea>
+              </div>
+
+              <button type="submit" class="w-full py-3 rounded-xl btn-vibrante text-white font-extrabold text-sm shadow-sm cursor-pointer">
+                <i class="fa-solid fa-floppy-disk mr-1.5"></i> Salvar Alterações de Texto
+              </button>
+            </form>
+
+            <!-- Bloco Adicionar Mais Vídeos, Imagens ou GIFs ao Mesmo Sinal -->
+            <form onsubmit="adicionarMaisMidiasAoSinal(event)" class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+              <h4 class="font-extrabold text-[#043e40] text-xs uppercase tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-cloud-arrow-up text-pink-600 text-base"></i> Adicionar Mais Vídeos, Imagens ou GIFs
+              </h4>
+              <p class="text-xs text-slate-500">Você pode selecionar vários arquivos de uma vez para anexar a este sinal.</p>
+              <input type="file" id="det-novos-arquivos" multiple accept="video/*,image/*" required
+                class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:font-bold file:bg-[#043e40] file:text-white cursor-pointer" />
+              <button type="submit" class="w-full py-2.5 rounded-xl ring-vibrante text-white font-extrabold text-xs uppercase tracking-wider shadow-sm cursor-pointer">
+                + Anexar Mídias Selecionadas
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================= -->
+  <!-- MODAL 2: CADASTRAR NOVO SINAL OFICIAL (SUPORTA MÚLTIPLOS ARQUIVOS)       -->
+  <!-- ======================================================================= -->
+  <div id="modal-novo-sinal" class="fixed inset-0 bg-slate-950/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto fade-in">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+        <h3 class="text-lg font-extrabold text-[#043e40]">Cadastrar Novo Sinal Oficial</h3>
+        <button onclick="fecharModal('modal-novo-sinal')" class="text-2xl text-slate-400 hover:text-slate-700">&times;</button>
+      </div>
+      <form onsubmit="criarNovoSinal(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Título do Sinal</label>
-          <input type="text" id="sinal-titulo" required placeholder="Ex: Obrigado / Obrigada"
-            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-amber-500" />
+          <input type="text" id="novo-sinal-titulo" required placeholder="Ex: Obrigado / Obrigada"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-[#043e40]" />
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Categoria</label>
-            <select id="sinal-cat" onchange="atualizarSubcatsAdm()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
+            <select id="novo-sinal-cat" onchange="atualizarSubcatsNovo()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Subcategoria</label>
-            <select id="sinal-subcat" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
+            <select id="novo-sinal-subcat" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
           </div>
         </div>
 
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Texto Explicativo</label>
-          <textarea id="sinal-texto" rows="3" required placeholder="Descreva a configuração de mão, ponto de articulação e movimento..."
-            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-amber-500"></textarea>
+          <textarea id="novo-sinal-texto" rows="4" required placeholder="Descreva a configuração de mão, ponto de articulação e movimento..."
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-[#043e40]"></textarea>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Tipo de Mídia</label>
-            <select id="sinal-tipo" onchange="toggleArquivoSinal()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white">
-              <option value="VIDEO">Vídeo (MP4/WebM)</option>
-              <option value="IMAGEM">Imagem (JPG/PNG)</option>
-              <option value="GIF">GIF Animado</option>
-              <option value="TEXTO">Somente Texto</option>
-            </select>
-          </div>
-          <div id="box-arquivo-sinal">
-            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Arquivo de Mídia</label>
-            <input type="file" id="sinal-arquivo" accept="video/*,image/*"
-              class="w-full text-xs text-slate-600 file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:font-bold file:bg-amber-50 file:text-amber-800" />
-          </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Vídeos, Imagens e GIFs (Opcional • Pode selecionar vários)</label>
+          <input type="file" id="novo-sinal-arquivos" multiple accept="video/*,image/*"
+            class="w-full text-xs text-slate-600 file:mr-2 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:font-bold file:bg-[#043e40]/10 file:text-[#043e40]" />
         </div>
 
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
-          <button type="button" onclick="fecharModal('modal-sinal')" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">Cancelar</button>
-          <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm shadow-sm cursor-pointer">
+          <button type="button" onclick="fecharModal('modal-novo-sinal')" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">Cancelar</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl btn-vibrante text-white font-extrabold text-sm shadow-sm cursor-pointer">
             Salvar no Acervo
           </button>
         </div>
@@ -418,29 +518,29 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- MODAL: NOVA CATEGORIA / SUBCATEGORIA                                    -->
+  <!-- MODAL 3: NOVA CATEGORIA / SUBCATEGORIA                                  -->
   <!-- ======================================================================= -->
-  <div id="modal-cat" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+  <div id="modal-cat" class="fixed inset-0 bg-slate-950/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl fade-in">
       <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-        <h3 class="text-lg font-extrabold text-slate-900">Nova Categoria / Subcategoria</h3>
+        <h3 class="text-lg font-extrabold text-[#043e40]">Nova Categoria / Subcategoria</h3>
         <button onclick="fecharModal('modal-cat')" class="text-2xl text-slate-400 hover:text-slate-700">&times;</button>
       </div>
       <form onsubmit="salvarCategoria(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Categoria Principal</label>
           <input type="text" id="nova-cat-pai" list="datalist-cats-pai" required placeholder="Escolha existente ou digite uma nova"
-            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-amber-500" />
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-[#043e40]" />
           <datalist id="datalist-cats-pai"></datalist>
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Subcategoria</label>
           <input type="text" id="nova-subcat" required placeholder="Ex: Verbos e Ações"
-            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-amber-500" />
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-[#043e40]" />
         </div>
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="fecharModal('modal-cat')" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600">Cancelar</button>
-          <button type="submit" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold text-sm cursor-pointer">
+          <button type="submit" class="px-5 py-2.5 rounded-xl btn-vibrante text-white font-extrabold text-sm cursor-pointer">
             Adicionar
           </button>
         </div>
@@ -456,6 +556,7 @@
     let admin = null;
     let categorias = [];
     let sinais = [];
+    let sinalAberto = null;
     let filtroCatAdm = null;
     let filtroSubAdm = null;
 
@@ -482,8 +583,8 @@
     function toast(msg, erro = false) {
       const el = document.getElementById('toast');
       el.innerHTML = `<i class="fa-solid ${erro ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i> <span>${msg}</span>`;
-      el.className = `fixed bottom-5 right-5 z-50 max-w-sm px-5 py-3.5 rounded-2xl shadow-2xl text-white font-semibold text-sm flex items-center gap-3 fade-in ${
-        erro ? 'bg-red-600' : 'bg-emerald-600'
+      el.className = `fixed bottom-5 right-5 z-[60] max-w-sm px-5 py-3.5 rounded-2xl shadow-2xl text-white font-semibold text-sm flex items-center gap-3 fade-in ${
+        erro ? 'bg-red-600' : 'bg-[#043e40]'
       }`;
       el.classList.remove('hidden');
       setTimeout(() => el.classList.add('hidden'), 4000);
@@ -541,50 +642,104 @@
     function mudarAba(aba) {
       ['sinais', 'comentarios', 'sugestoes', 'forum', 'mensagens', 'usuarios'].forEach(s => {
         document.getElementById('sec-' + s).classList.add('hidden');
-        document.getElementById('nav-' + s).className = 'nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-900 hover:text-white transition cursor-pointer';
+        document.getElementById('nav-' + s).className = 'nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-teal-200/75 hover:bg-[#043e40] hover:text-white transition cursor-pointer';
       });
       document.getElementById('sec-' + aba).classList.remove('hidden');
-      document.getElementById('nav-' + aba).className = 'nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold bg-amber-500 text-slate-950 transition cursor-pointer';
+      document.getElementById('nav-' + aba).className = 'nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold ring-vibrante text-white shadow-md transition cursor-pointer';
       document.getElementById('titulo-pagina-atual').innerText = TITULOS_ABAS[aba];
       toggleMenuMobile(false);
     }
 
     function fecharModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    function renderMidia(tipo, url) {
-      if (!url || tipo === 'TEXTO') return '';
-      return tipo === 'VIDEO'
-        ? `<video src="${url}" controls loop playsinline class="w-full max-h-56 rounded-xl bg-slate-950 object-contain"></video>`
-        : `<img src="${url}" class="w-full max-h-56 rounded-xl bg-slate-100 object-contain" />`;
+    // Unifica mídia principal legada (url_midia) + lista de múltiplas mídias (midias_extras)
+    function obterTodasMidiasSinal(s) {
+      const lista = [];
+      if (s.url_midia && s.tipo_midia !== 'TEXTO') {
+        lista.push({ tipo: s.tipo_midia, url: s.url_midia, path: s.storage_path || '', principal: true });
+      }
+      if (Array.isArray(s.midias_extras)) {
+        s.midias_extras.forEach((m, idx) => lista.push({ ...m, principal: false, extraIndex: idx }));
+      }
+      return lista;
     }
 
-    // --- 1. CATEGORIAS E SINAIS ---
+    function detectarTipoArquivo(file) {
+      if (file.type.startsWith('video/')) return 'VIDEO';
+      if (file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif')) return 'GIF';
+      return 'IMAGEM';
+    }
+
+    function renderMidiaCard(tipo, url) {
+      if (!url || tipo === 'TEXTO') return '';
+      return tipo === 'VIDEO'
+        ? `<video src="${url}" controls loop playsinline class="w-full max-h-52 rounded-xl bg-slate-950 object-contain"></video>`
+        : `<img src="${url}" class="w-full max-h-52 rounded-xl bg-slate-100 object-contain" />`;
+    }
+
+    // --- 1. CATEGORIAS (ADICIONAR E EXCLUIR) ---
     async function carregarCategorias() {
       const { data } = await db.from('categorias').select('*').order('ordem');
       categorias = data || [];
       const unicas = [...new Set(categorias.map(c => c.categoria_pai))];
 
       document.getElementById('datalist-cats-pai').innerHTML = unicas.map(c => `<option value="${c}">`).join('');
-      document.getElementById('sinal-cat').innerHTML = unicas.map(c => `<option value="${c}">${c}</option>`).join('');
-      atualizarSubcatsAdm();
+      const optionsCats = unicas.map(c => `<option value="${c}">${c}</option>`).join('');
+      document.getElementById('novo-sinal-cat').innerHTML = optionsCats;
+      document.getElementById('det-edit-cat').innerHTML = optionsCats;
+      atualizarSubcatsNovo();
 
       document.getElementById('lista-cats-adm').innerHTML = unicas.map(cat => {
-        const subs = categorias.filter(c => c.categoria_pai === cat).map(c => c.subcategoria);
+        const itensCat = categorias.filter(c => c.categoria_pai === cat);
         return `
-          <div class="border border-slate-100 rounded-xl overflow-hidden">
-            <button onclick="filtrarPorCategoriaAdm('${cat}', null)"
-              class="w-full text-left px-3 py-2 bg-slate-50 hover:bg-amber-50 text-xs font-extrabold text-slate-800 cursor-pointer">
-              ${cat}
-            </button>
-            <div class="divide-y divide-slate-50">
-              ${subs.map(sub => `
-                <button onclick="filtrarPorCategoriaAdm('${cat}', '${sub}')"
-                  class="w-full text-left pl-5 pr-3 py-1.5 text-xs text-slate-600 hover:text-amber-700 hover:bg-amber-50/40 cursor-pointer">
-                  › ${sub}
-                </button>`).join('')}
+          <div class="border border-slate-200/80 rounded-xl overflow-hidden">
+            <div class="flex items-center justify-between bg-[#043e40]/10 hover:bg-[#043e40]/15 px-3 py-2">
+              <button onclick="filtrarPorCategoriaAdm('${cat.replace(/'/g, "\\'")}', null)"
+                class="flex-1 text-left text-xs font-extrabold text-[#043e40] truncate cursor-pointer">
+                ${cat}
+              </button>
+              <button onclick="excluirCategoriaPai('${cat.replace(/'/g, "\\'")}')" title="Excluir categoria inteira"
+                class="text-slate-400 hover:text-red-600 px-1.5 text-xs cursor-pointer">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+            <div class="divide-y divide-slate-100 bg-white">
+              ${itensCat.map(item => `
+                <div class="flex items-center justify-between pl-4 pr-2.5 py-1.5 hover:bg-slate-50">
+                  <button onclick="filtrarPorCategoriaAdm('${cat.replace(/'/g, "\\'")}', '${item.subcategoria.replace(/'/g, "\\'")}')"
+                    class="flex-1 text-left text-xs text-slate-600 hover:text-[#043e40] font-medium truncate cursor-pointer">
+                    › ${item.subcategoria}
+                  </button>
+                  <button onclick="excluirSubcategoria('${item.id}', '${item.subcategoria.replace(/'/g, "\\'")}')" title="Excluir subcategoria"
+                    class="text-slate-300 hover:text-red-600 px-1.5 text-[11px] cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </div>`).join('')}
             </div>
           </div>`;
       }).join('');
+    }
+
+    async function excluirCategoriaPai(catPai) {
+      if (!confirm(`Excluir a categoria "${catPai}" e todas as suas subcategorias?`)) return;
+      showLoader('Excluindo categoria...');
+      const { error } = await db.from('categorias').delete().eq('categoria_pai', catPai);
+      hideLoader();
+      if (error) return toast(error.message, true);
+      if (filtroCatAdm === catPai) filtrarPorCategoriaAdm(null, null);
+      toast('Categoria excluída.');
+      carregarCategorias();
+    }
+
+    async function excluirSubcategoria(id, nomeSub) {
+      if (!confirm(`Excluir a subcategoria "${nomeSub}"?`)) return;
+      showLoader('Excluindo subcategoria...');
+      const { error } = await db.from('categorias').delete().eq('id', id);
+      hideLoader();
+      if (error) return toast(error.message, true);
+      if (filtroSubAdm === nomeSub) filtrarPorCategoriaAdm(filtroCatAdm, null);
+      toast('Subcategoria excluída.');
+      carregarCategorias();
     }
 
     function filtrarPorCategoriaAdm(cat, sub) {
@@ -594,10 +749,16 @@
       renderizarSinaisAdm();
     }
 
-    function atualizarSubcatsAdm() {
-      const cat = document.getElementById('sinal-cat').value;
+    function atualizarSubcatsNovo() {
+      const cat = document.getElementById('novo-sinal-cat').value;
       const subs = categorias.filter(c => c.categoria_pai === cat).map(c => c.subcategoria);
-      document.getElementById('sinal-subcat').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
+      document.getElementById('novo-sinal-subcat').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
+    }
+
+    function atualizarSubcatsDetalhe() {
+      const cat = document.getElementById('det-edit-cat').value;
+      const subs = categorias.filter(c => c.categoria_pai === cat).map(c => c.subcategoria);
+      document.getElementById('det-edit-subcat').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
     function abrirModalCategoria() {
@@ -621,11 +782,16 @@
       carregarCategorias();
     }
 
+    // --- 2. SINAIS (LISTAGEM, TELA AMPLIADA E MÚLTIPLAS MÍDIAS) ---
     async function carregarSinais() {
       const { data } = await db.from('sinais').select('*').order('atualizado_em', { ascending: false });
       sinais = data || [];
       document.getElementById('kpi-sinais').innerText = sinais.length;
       renderizarSinaisAdm();
+      if (sinalAberto) {
+        const atualizado = sinais.find(item => item.id === sinalAberto.id);
+        if (atualizado) abrirDetalheSinal(atualizado.id);
+      }
     }
 
     function renderizarSinaisAdm() {
@@ -636,122 +802,258 @@
         (!q || s.titulo_sinal.toLowerCase().includes(q) || s.texto_explicativo.toLowerCase().includes(q))
       );
 
-      document.getElementById('grid-sinais-adm').innerHTML = lista.length ? lista.map(s => `
-        <article class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 flex flex-col justify-between fade-in">
+      document.getElementById('grid-sinais-adm').innerHTML = lista.length ? lista.map(s => {
+        const midias = obterTodasMidiasSinal(s);
+        const capa = midias[0];
+        return `
+        <article onclick="abrirDetalheSinal('${s.id}')"
+          class="bg-white rounded-2xl border border-slate-200/90 hover:border-[#043e40]/40 shadow-xs hover:shadow-md p-5 flex flex-col justify-between transition cursor-pointer fade-in group">
           <div>
-            <div class="flex items-center justify-between gap-2 mb-2">
-              <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800">
+            <div class="flex items-center justify-between gap-2 mb-2.5">
+              <span class="text-[11px] font-bold px-3 py-1 rounded-full bg-[#043e40]/10 text-[#043e40]">
                 ${s.categoria_pai} • ${s.subcategoria}
               </span>
-              <span class="text-[10px] font-extrabold text-slate-400">${s.tipo_midia}</span>
+              <span class="text-[11px] font-extrabold text-pink-600">
+                ${midias.length ? `${midias.length} mídia(s)` : 'TEXTO'}
+              </span>
             </div>
-            <h3 class="text-lg font-extrabold text-slate-900 mb-3">${s.titulo_sinal}</h3>
-            ${renderMidia(s.tipo_midia, s.url_midia)}
-            <p class="text-sm text-slate-600 mt-3 leading-relaxed">${s.texto_explicativo}</p>
+            <h3 class="text-lg font-extrabold text-slate-900 group-hover:text-[#043e40] mb-3 transition">${s.titulo_sinal}</h3>
+            ${capa ? renderMidiaCard(capa.tipo, capa.url) : ''}
+            <p class="text-sm text-slate-600 mt-3 leading-relaxed line-clamp-3">${s.texto_explicativo}</p>
           </div>
-          <div class="flex gap-2 pt-3 mt-4 border-t border-slate-100">
-            <button onclick='abrirModalSinal(${JSON.stringify(s).replace(/'/g, "&#39;")})'
-              class="flex-1 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-extrabold transition cursor-pointer">
-              <i class="fa-solid fa-pen-to-square mr-1"></i> Editar Mídia / Texto
-            </button>
-            <button onclick="excluirSinal('${s.id}', '${s.storage_path || ''}')"
-              class="px-3.5 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold transition cursor-pointer">
-              <i class="fa-solid fa-trash"></i>
+          <div class="pt-3 mt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-extrabold text-[#043e40] flex items-center gap-1.5">
+              <i class="fa-solid fa-expand"></i> Abrir em Tela Ampla / Editar
+            </span>
+            <i class="fa-solid fa-arrow-right text-xs text-slate-400 group-hover:translate-x-1 transition"></i>
+          </div>
+        </article>`;
+      }).join('') : '<div class="col-span-full bg-white p-10 rounded-2xl border border-slate-200 text-center text-slate-400 font-semibold">Nenhum sinal encontrado.</div>';
+    }
+
+    // Abre o sinal ocupando ~95% da tela
+    function abrirDetalheSinal(id) {
+      const s = sinais.find(item => item.id === id);
+      if (!s) return;
+      sinalAberto = s;
+
+      document.getElementById('det-categoria-badge').innerText = `${s.categoria_pai} › ${s.subcategoria}`;
+      document.getElementById('det-titulo').innerText = s.titulo_sinal;
+      document.getElementById('det-edit-titulo').value = s.titulo_sinal;
+      document.getElementById('det-edit-cat').value = s.categoria_pai;
+      atualizarSubcatsDetalhe();
+      document.getElementById('det-edit-subcat').value = s.subcategoria;
+      document.getElementById('det-edit-texto').value = s.texto_explicativo;
+      document.getElementById('det-novos-arquivos').value = '';
+
+      const midias = obterTodasMidiasSinal(s);
+      document.getElementById('det-total-midias').innerText = `${midias.length} arquivo(s)`;
+
+      const galeria = document.getElementById('det-galeria-midias');
+      galeria.innerHTML = midias.length ? midias.map((m, i) => `
+        <div class="bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
+          <div class="px-4 py-2 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between text-xs text-slate-300">
+            <span class="font-bold">#${i + 1} • ${m.tipo}</span>
+            <button onclick="removerMidiaIndividual(${m.principal}, ${m.extraIndex ?? -1})"
+              class="text-red-400 hover:text-red-300 font-bold cursor-pointer">
+              <i class="fa-solid fa-trash-can mr-1"></i> Remover
             </button>
           </div>
-        </article>`).join('') : '<div class="col-span-full bg-white p-10 rounded-2xl border border-slate-200 text-center text-slate-400 font-semibold">Nenhum sinal encontrado.</div>';
+          <div class="p-2 flex items-center justify-center bg-black">
+            ${m.tipo === 'VIDEO'
+              ? `<video src="${m.url}" controls loop playsinline class="w-full max-h-[65vh] rounded-xl object-contain"></video>`
+              : `<img src="${m.url}" class="w-full max-h-[65vh] rounded-xl object-contain" />`
+            }
+          </div>
+        </div>
+      `).join('') : `
+        <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-10 text-center text-slate-400">
+          <i class="fa-solid fa-film text-3xl mb-2 text-teal-400"></i>
+          <p class="text-sm font-semibold">Este sinal ainda possui apenas texto explicativo.</p>
+          <p class="text-xs mt-1">Use o formulário ao lado para anexar vídeos, imagens ou GIFs.</p>
+        </div>`;
+
+      document.getElementById('modal-detalhe-sinal').classList.remove('hidden');
     }
 
-    function toggleArquivoSinal() {
-      const isTexto = document.getElementById('sinal-tipo').value === 'TEXTO';
-      document.getElementById('box-arquivo-sinal').classList.toggle('hidden', isTexto);
-    }
-
-    function abrirModalSinal(s = null) {
-      document.getElementById('modal-sinal').classList.remove('hidden');
-      document.getElementById('sinal-arquivo').value = '';
-      if (s) {
-        document.getElementById('modal-sinal-titulo').innerText = 'Editar Sinal Oficial';
-        document.getElementById('sinal-id').value = s.id;
-        document.getElementById('sinal-url-atual').value = s.url_midia || '';
-        document.getElementById('sinal-path-atual').value = s.storage_path || '';
-        document.getElementById('sinal-titulo').value = s.titulo_sinal;
-        document.getElementById('sinal-cat').value = s.categoria_pai;
-        atualizarSubcatsAdm();
-        document.getElementById('sinal-subcat').value = s.subcategoria;
-        document.getElementById('sinal-texto').value = s.texto_explicativo;
-        document.getElementById('sinal-tipo').value = s.tipo_midia;
-      } else {
-        document.getElementById('modal-sinal-titulo').innerText = 'Novo Sinal Oficial';
-        document.getElementById('sinal-id').value = '';
-        document.getElementById('sinal-url-atual').value = '';
-        document.getElementById('sinal-path-atual').value = '';
-        document.getElementById('sinal-titulo').value = '';
-        document.getElementById('sinal-texto').value = '';
-      }
-      toggleArquivoSinal();
-    }
-
-    async function salvarSinal(e) {
+    async function salvarEdicaoTextoSinal(e) {
       e.preventDefault();
-      const id = document.getElementById('sinal-id').value;
-      const tipo = document.getElementById('sinal-tipo').value;
-      const file = document.getElementById('sinal-arquivo').files[0];
-      let urlMidia = document.getElementById('sinal-url-atual').value || null;
-      let storagePath = document.getElementById('sinal-path-atual').value || null;
+      if (!sinalAberto) return;
+      showLoader('Salvando alterações do sinal...');
+      const { error } = await db.from('sinais').update({
+        titulo_sinal: document.getElementById('det-edit-titulo').value.trim(),
+        categoria_pai: document.getElementById('det-edit-cat').value,
+        subcategoria: document.getElementById('det-edit-subcat').value,
+        texto_explicativo: document.getElementById('det-edit-texto').value.trim(),
+        editado_por: admin.perfilNome,
+        atualizado_em: new Date().toISOString()
+      }).eq('id', sinalAberto.id);
+      hideLoader();
+      if (error) return toast(error.message, true);
+      toast('Texto e dados do sinal atualizados!');
+      carregarSinais();
+    }
+
+    async function adicionarMaisMidiasAoSinal(e) {
+      e.preventDefault();
+      if (!sinalAberto) return;
+      const files = Array.from(document.getElementById('det-novos-arquivos').files);
+      if (!files.length) return;
 
       try {
-        showLoader('Salvando sinal no acervo...');
-        if (tipo === 'TEXTO') {
-          if (storagePath) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove([storagePath]);
-          urlMidia = null; storagePath = null;
-        } else if (file) {
-          if (storagePath) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove([storagePath]);
+        showLoader(`Enviando ${files.length} arquivo(s)...`);
+        const extrasAtuais = Array.isArray(sinalAberto.midias_extras) ? [...sinalAberto.midias_extras] : [];
+        let urlPrincipal = sinalAberto.url_midia;
+        let pathPrincipal = sinalAberto.storage_path;
+        let tipoPrincipal = sinalAberto.tipo_midia;
+
+        for (const file of files) {
+          const tipo = detectarTipoArquivo(file);
           const ext = file.name.split('.').pop();
-          storagePath = `oficiais/${Date.now()}_${Math.random().toString(36).slice(2, 7)}.${ext}`;
-          const { error: upErr } = await db.storage.from(SUPABASE_CONFIG.BUCKET).upload(storagePath, file);
+          const path = `oficiais/${Date.now()}_${Math.random().toString(36).slice(2, 7)}.${ext}`;
+          const { error: upErr } = await db.storage.from(SUPABASE_CONFIG.BUCKET).upload(path, file);
           if (upErr) throw upErr;
-          urlMidia = db.storage.from(SUPABASE_CONFIG.BUCKET).getPublicUrl(storagePath).data.publicUrl;
+          const url = db.storage.from(SUPABASE_CONFIG.BUCKET).getPublicUrl(path).data.publicUrl;
+
+          if (!urlPrincipal || tipoPrincipal === 'TEXTO') {
+            urlPrincipal = url;
+            pathPrincipal = path;
+            tipoPrincipal = tipo;
+          } else {
+            extrasAtuais.push({ tipo, url, path });
+          }
         }
 
-        const payload = {
-          titulo_sinal: document.getElementById('sinal-titulo').value,
-          categoria_pai: document.getElementById('sinal-cat').value,
-          subcategoria: document.getElementById('sinal-subcat').value,
-          texto_explicativo: document.getElementById('sinal-texto').value,
-          tipo_midia: tipo,
-          url_midia: urlMidia,
-          storage_path: storagePath,
+        const { error } = await db.from('sinais').update({
+          tipo_midia: tipoPrincipal,
+          url_midia: urlPrincipal,
+          storage_path: pathPrincipal,
+          midias_extras: extrasAtuais,
           editado_por: admin.perfilNome,
           atualizado_em: new Date().toISOString()
-        };
-
-        const res = id
-          ? await db.from('sinais').update(payload).eq('id', id)
-          : await db.from('sinais').insert(payload);
+        }).eq('id', sinalAberto.id);
 
         hideLoader();
-        if (res.error) return toast(res.error.message, true);
-        fecharModal('modal-sinal');
-        toast('Sinal salvo com sucesso!');
+        if (error) return toast(error.message, true);
+        toast('Novas mídias anexadas ao sinal!');
         carregarSinais();
       } catch (err) {
         hideLoader();
-        toast('Erro no upload: ' + err.message, true);
+        toast('Erro no envio: ' + err.message, true);
       }
     }
 
-    async function excluirSinal(id, path) {
-      if (!confirm('Deseja excluir permanentemente este sinal do acervo?')) return;
-      showLoader('Excluindo...');
-      if (path) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove([path]);
-      await db.from('sinais').delete().eq('id', id);
+    async function removerMidiaIndividual(isPrincipal, extraIndex) {
+      if (!sinalAberto || !confirm('Remover esta mídia do sinal?')) return;
+      showLoader('Removendo mídia...');
+      const extras = Array.isArray(sinalAberto.midias_extras) ? [...sinalAberto.midias_extras] : [];
+      let urlPrincipal = sinalAberto.url_midia;
+      let pathPrincipal = sinalAberto.storage_path;
+      let tipoPrincipal = sinalAberto.tipo_midia;
+
+      if (isPrincipal) {
+        if (pathPrincipal) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove([pathPrincipal]);
+        if (extras.length > 0) {
+          const proxima = extras.shift();
+          urlPrincipal = proxima.url;
+          pathPrincipal = proxima.path || null;
+          tipoPrincipal = proxima.tipo;
+        } else {
+          urlPrincipal = null;
+          pathPrincipal = null;
+          tipoPrincipal = 'TEXTO';
+        }
+      } else if (extraIndex >= 0 && extras[extraIndex]) {
+        const alvo = extras[extraIndex];
+        if (alvo.path) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove([alvo.path]);
+        extras.splice(extraIndex, 1);
+      }
+
+      await db.from('sinais').update({
+        tipo_midia: tipoPrincipal,
+        url_midia: urlPrincipal,
+        storage_path: pathPrincipal,
+        midias_extras: extras,
+        atualizado_em: new Date().toISOString()
+      }).eq('id', sinalAberto.id);
+
       hideLoader();
+      toast('Mídia removida.');
+      carregarSinais();
+    }
+
+    async function excluirSinalAtual() {
+      if (!sinalAberto || !confirm(`Excluir permanentemente o sinal "${sinalAberto.titulo_sinal}"?`)) return;
+      showLoader('Excluindo sinal...');
+      const paths = [];
+      if (sinalAberto.storage_path) paths.push(sinalAberto.storage_path);
+      if (Array.isArray(sinalAberto.midias_extras)) {
+        sinalAberto.midias_extras.forEach(m => { if (m.path) paths.push(m.path); });
+      }
+      if (paths.length) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove(paths);
+      await db.from('sinais').delete().eq('id', sinalAberto.id);
+      hideLoader();
+      sinalAberto = null;
+      fecharModal('modal-detalhe-sinal');
       toast('Sinal excluído.');
       carregarSinais();
     }
 
-    // --- 2. COMENTÁRIOS ---
+    function abrirModalNovoSinal() {
+      document.getElementById('novo-sinal-titulo').value = '';
+      document.getElementById('novo-sinal-texto').value = '';
+      document.getElementById('novo-sinal-arquivos').value = '';
+      document.getElementById('modal-novo-sinal').classList.remove('hidden');
+    }
+
+    async function criarNovoSinal(e) {
+      e.preventDefault();
+      const files = Array.from(document.getElementById('novo-sinal-arquivos').files);
+      try {
+        showLoader('Cadastrando sinal...');
+        let urlPrincipal = null, pathPrincipal = null, tipoPrincipal = 'TEXTO';
+        const extras = [];
+
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const tipo = detectarTipoArquivo(file);
+          const ext = file.name.split('.').pop();
+          const path = `oficiais/${Date.now()}_${i}_${Math.random().toString(36).slice(2, 6)}.${ext}`;
+          const { error: upErr } = await db.storage.from(SUPABASE_CONFIG.BUCKET).upload(path, file);
+          if (upErr) throw upErr;
+          const url = db.storage.from(SUPABASE_CONFIG.BUCKET).getPublicUrl(path).data.publicUrl;
+
+          if (i === 0) {
+            urlPrincipal = url; pathPrincipal = path; tipoPrincipal = tipo;
+          } else {
+            extras.push({ tipo, url, path });
+          }
+        }
+
+        const { error } = await db.from('sinais').insert({
+          titulo_sinal: document.getElementById('novo-sinal-titulo').value.trim(),
+          categoria_pai: document.getElementById('novo-sinal-cat').value,
+          subcategoria: document.getElementById('novo-sinal-subcat').value,
+          texto_explicativo: document.getElementById('novo-sinal-texto').value.trim(),
+          tipo_midia: tipoPrincipal,
+          url_midia: urlPrincipal,
+          storage_path: pathPrincipal,
+          midias_extras: extras,
+          editado_por: admin.perfilNome
+        });
+
+        hideLoader();
+        if (error) return toast(error.message, true);
+        fecharModal('modal-novo-sinal');
+        toast('Sinal cadastrado com sucesso!');
+        carregarSinais();
+      } catch (err) {
+        hideLoader();
+        toast('Erro ao salvar: ' + err.message, true);
+      }
+    }
+
+    // --- 3. COMENTÁRIOS ---
     async function carregarComentarios() {
       const { data } = await db.from('comentarios_sinais').select('*').order('criado_em', { ascending: false });
       const lista = data || [];
@@ -762,23 +1064,23 @@
       badge.classList.toggle('hidden', novos === 0);
 
       document.getElementById('lista-comentarios-adm').innerHTML = lista.length ? lista.map(c => `
-        <div class="p-4 rounded-2xl border ${c.status_leitura === 'NOVO' ? 'bg-amber-50/70 border-amber-300' : 'bg-slate-50 border-slate-200'}">
+        <div class="p-4 rounded-2xl border ${c.status_leitura === 'NOVO' ? 'bg-pink-50/50 border-pink-200' : 'bg-slate-50 border-slate-200'}">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <span class="text-xs font-extrabold text-blue-700 bg-blue-50 px-3 py-1 rounded-full">
+            <span class="text-xs font-extrabold text-[#043e40] bg-[#043e40]/10 px-3 py-1 rounded-full">
               <i class="fa-solid fa-video mr-1"></i> Sinal: ${c.nome_video_sinal}
             </span>
             <span class="text-[11px] font-bold text-slate-500">Enviado por @${c.usuario_perfil} • ${c.status_leitura}</span>
           </div>
           <p class="text-sm text-slate-800 my-2">"${c.comentario_texto}"</p>
           ${c.resposta_adm ? `
-            <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-900">
+            <div class="p-3 rounded-xl bg-teal-50 border border-teal-200 text-xs text-[#043e40]">
               <strong>Resposta ADM (@${c.respondido_por_adm}):</strong> ${c.resposta_adm}
             </div>` : `
             <div class="flex flex-col sm:flex-row gap-2 mt-3">
               <input type="text" id="resp-com-${c.id}" placeholder="Escreva uma resposta para @${c.usuario_perfil}..."
                 class="flex-1 px-3.5 py-2 rounded-xl border border-slate-300 text-xs bg-white outline-none" />
               <button onclick="responderComentario('${c.id}')"
-                class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold cursor-pointer">
+                class="px-4 py-2 rounded-xl btn-vibrante text-white text-xs font-bold cursor-pointer">
                 Responder
               </button>
             </div>`}
@@ -798,7 +1100,7 @@
       carregarComentarios();
     }
 
-    // --- 3. SUGESTÕES ---
+    // --- 4. SUGESTÕES ---
     async function carregarSugestoes() {
       const { data } = await db.from('sugestoes').select('*').order('data_envio', { ascending: false });
       const lista = data || [];
@@ -818,14 +1120,14 @@
           </div>
           <h4 class="font-extrabold text-slate-900 text-base">${s.titulo_sinal}</h4>
           <p class="text-sm text-slate-600 my-2">${s.texto_sugestao}</p>
-          ${renderMidia(s.tipo_midia, s.url_midia)}
+          ${renderMidiaCard(s.tipo_midia, s.url_midia)}
           ${s.status_sugestao === 'EM ANALISE' ? `
             <div class="mt-4 pt-3 border-t border-slate-200 space-y-2.5">
               <input type="text" id="resp-sug-${s.id}" placeholder="Resposta oficial do ADM para o usuário..."
                 class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs bg-white outline-none" />
               <div class="flex flex-wrap gap-2">
                 <button onclick='finalizarSugestao(${JSON.stringify(s).replace(/'/g, "&#39;")}, true)'
-                  class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold cursor-pointer">
+                  class="px-4 py-2 rounded-xl btn-vibrante text-white text-xs font-bold cursor-pointer">
                   <i class="fa-solid fa-check mr-1"></i> Finalizar e Publicar na Biblioteca
                 </button>
                 <button onclick='finalizarSugestao(${JSON.stringify(s).replace(/'/g, "&#39;")}, false)'
@@ -866,13 +1168,13 @@
       carregarSugestoes();
     }
 
-    // --- 4. FÓRUM, MENSAGENS E USUÁRIOS ---
+    // --- 5. FÓRUM, MENSAGENS E USUÁRIOS ---
     async function carregarForumAdm() {
       const { data } = await db.from('forum_topicos').select('*').order('criado_em', { ascending: false });
       document.getElementById('lista-forum-adm').innerHTML = (data || []).map(t => `
         <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex items-start justify-between gap-4">
           <div>
-            <span class="text-xs font-bold text-purple-700">@${t.autor_perfil} • ${t.categoria_forum}</span>
+            <span class="text-xs font-bold text-pink-600">@${t.autor_perfil} • ${t.categoria_forum}</span>
             <h4 class="font-extrabold text-slate-900 mt-0.5">${t.titulo}</h4>
             <p class="text-sm text-slate-600 mt-1">${t.conteudo}</p>
           </div>
@@ -916,7 +1218,7 @@
         const rec = m.destinatario_perfil === admin.perfilNome;
         return `
           <div onclick="${rec && !m.visualizada ? `marcarLidaAdm('${m.id}')` : ''}"
-            class="p-3.5 rounded-xl border text-xs ${rec && !m.visualizada ? 'bg-amber-50 border-amber-300 cursor-pointer' : 'bg-slate-50 border-slate-200'}">
+            class="p-3.5 rounded-xl border text-xs ${rec && !m.visualizada ? 'bg-teal-50 border-teal-300 cursor-pointer' : 'bg-slate-50 border-slate-200'}">
             <div class="flex justify-between font-bold mb-1">
               <span>${rec ? 'De: @' + m.remetente_perfil : 'Para: @' + m.destinatario_perfil}</span>
               <span>${m.visualizada ? 'Visualizada' : 'Não visualizada'}</span>
@@ -941,7 +1243,7 @@
         <tr>
           <td class="px-5 py-3.5 font-bold text-slate-900">${u.nome_completo}</td>
           <td class="px-5 py-3.5 text-slate-600">@${u.nome_perfil}</td>
-          <td class="px-5 py-3.5"><span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${u.perfil === 'ADMIN' ? 'bg-amber-100 text-amber-800' : 'bg-blue-50 text-blue-700'}">${u.perfil}</span></td>
+          <td class="px-5 py-3.5"><span class="text-xs font-bold px-2.5 py-0.5 rounded-full ${u.perfil === 'ADMIN' ? 'bg-[#043e40]/10 text-[#043e40]' : 'bg-pink-50 text-pink-700'}">${u.perfil}</span></td>
           <td class="px-5 py-3.5"><span class="text-xs font-bold ${u.status === 'ATIVO' ? 'text-emerald-600' : 'text-red-600'}">${u.status}</span></td>
           <td class="px-5 py-3.5 text-right">
             ${u.nome_perfil !== admin.perfilNome ? `
