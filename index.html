@@ -284,7 +284,7 @@
                   class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white text-sm outline-none focus:ring-2 focus:ring-[#043e40]" />
               </div>
               <div class="flex gap-2">
-                <button id="btn-limpar-cat" onclick="filtrarPorCategoriaAdm(null, null)"
+                <button id="btn-limpar-cat" onclick="filtrarPorCategoriaAdm(null)"
                   class="hidden px-3 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer">
                   Todos
                 </button>
@@ -298,22 +298,23 @@
             <div id="grid-sinais-adm" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
           </div>
 
+          <!-- PAINEL DE CATEGORIAS (SEM SUBCATEGORIAS, COM CRIAR / EDITAR / EXCLUIR) -->
           <aside class="w-full xl:w-80 shrink-0">
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sticky top-20">
               <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
                 <h3 class="font-extrabold text-[#043e40] flex items-center gap-2">
-                  <i class="fa-solid fa-folder-tree text-pink-600"></i> Categorias
+                  <i class="fa-solid fa-folder-open text-pink-600"></i> Categorias
                 </h3>
                 <button onclick="abrirModalCategoria()"
                   class="text-xs font-extrabold px-3 py-1.5 rounded-xl ring-vibrante text-white shadow-xs transition cursor-pointer">
                   + Nova
                 </button>
               </div>
-              <button onclick="filtrarPorCategoriaAdm(null, null)"
-                class="w-full text-left px-3.5 py-2 rounded-xl text-xs font-bold text-[#043e40] bg-[#043e40]/10 hover:bg-[#043e40]/15 mb-3 cursor-pointer">
+              <button onclick="filtrarPorCategoriaAdm(null)" id="btn-todas-cats"
+                class="w-full text-left px-3.5 py-2.5 rounded-xl text-xs font-bold text-[#043e40] bg-[#043e40]/10 hover:bg-[#043e40]/15 mb-3 cursor-pointer">
                 Todas as Categorias
               </button>
-              <div id="lista-cats-adm" class="space-y-2.5 max-h-[60vh] overflow-y-auto pr-1"></div>
+              <div id="lista-cats-adm" class="space-y-2 max-h-[60vh] overflow-y-auto pr-1"></div>
             </div>
           </aside>
         </div>
@@ -401,7 +402,7 @@
     <div class="bg-white rounded-3xl w-[96vw] h-[94vh] max-w-[1600px] shadow-2xl flex flex-col overflow-hidden fade-in border border-teal-900/20">
       <div class="bg-[#043e40] text-white px-5 sm:px-8 py-4 flex items-center justify-between gap-4 shrink-0">
         <div class="min-w-0">
-          <span id="det-categoria-badge" class="inline-block text-[11px] font-extrabold uppercase tracking-wider px-3 py-0.5 rounded-full bg-white/15 text-amber-300 mb-1"></span>
+          <div id="det-categoria-badge" class="flex flex-wrap gap-1.5 mb-1"></div>
           <h2 id="det-titulo" class="text-xl sm:text-2xl font-extrabold truncate"></h2>
         </div>
         <div class="flex items-center gap-2 shrink-0">
@@ -430,7 +431,7 @@
             <form onsubmit="salvarEdicaoTextoSinal(event)" class="space-y-4">
               <div class="flex items-center justify-between border-b border-slate-100 pb-2">
                 <h4 class="font-extrabold text-[#043e40] text-sm uppercase tracking-wider">
-                  <i class="fa-solid fa-pen-to-square text-pink-600 mr-1.5"></i> Dados e Explicação do Sinal
+                  <i class="fa-solid fa-pen-to-square text-pink-600 mr-1.5"></i> Dados e Categorias do Sinal
                 </h4>
               </div>
               <div>
@@ -438,25 +439,17 @@
                 <input type="text" id="det-edit-titulo" required
                   class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#043e40] outline-none" />
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Categoria</label>
-                  <select id="det-edit-cat" onchange="atualizarSubcatsDetalhe()"
-                    class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
-                </div>
-                <div>
-                  <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Subcategoria</label>
-                  <select id="det-edit-subcat"
-                    class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
-                </div>
+              <div>
+                <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Categorias do Sinal (Selecione 1 ou mais)</label>
+                <div id="det-edit-cats-box" class="max-h-36 overflow-y-auto p-3 rounded-xl border border-slate-300 bg-slate-50 space-y-2"></div>
               </div>
               <div>
                 <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Texto Explicativo Completo</label>
-                <textarea id="det-edit-texto" rows="6" required
+                <textarea id="det-edit-texto" rows="5" required
                   class="w-full px-3.5 py-3 rounded-xl border border-slate-300 text-sm leading-relaxed text-slate-800 focus:ring-2 focus:ring-[#043e40] outline-none"></textarea>
               </div>
               <button type="submit" class="w-full py-3 rounded-xl btn-vibrante text-white font-extrabold text-sm shadow-sm cursor-pointer">
-                <i class="fa-solid fa-floppy-disk mr-1.5"></i> Salvar Alterações de Texto
+                <i class="fa-solid fa-floppy-disk mr-1.5"></i> Salvar Alterações
               </button>
             </form>
 
@@ -464,9 +457,10 @@
               <h4 class="font-extrabold text-[#043e40] text-xs uppercase tracking-wider flex items-center gap-2">
                 <i class="fa-brands fa-google-drive text-pink-600 text-base"></i> Adicionar Mais Vídeos, Imagens ou GIFs no Drive
               </h4>
-              <p class="text-xs text-slate-500">Selecione um ou mais arquivos para salvar automaticamente no Google Drive.</p>
-              <input type="file" id="det-novos-arquivos" multiple accept="video/*,image/*" required
+              <p class="text-xs text-slate-500">Selecione um ou mais arquivos e remova qualquer item indesejado antes de enviar.</p>
+              <input type="file" id="det-novos-arquivos" multiple accept="video/*,image/*" onchange="selecionarArquivosDetalhe(this)"
                 class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:font-bold file:bg-[#043e40] file:text-white cursor-pointer" />
+              <div id="det-lista-arquivos-selecionados" class="space-y-1.5"></div>
               <button type="submit" class="w-full py-2.5 rounded-xl ring-vibrante text-white font-extrabold text-xs uppercase tracking-wider shadow-sm cursor-pointer">
                 + Anexar Mídias no Google Drive
               </button>
@@ -490,15 +484,9 @@
           <input type="text" id="novo-sinal-titulo" required placeholder="Ex: Obrigado / Obrigada"
             class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-[#043e40]" />
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Categoria</label>
-            <select id="novo-sinal-cat" onchange="atualizarSubcatsNovo()" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Subcategoria</label>
-            <select id="novo-sinal-subcat" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
-          </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Categorias (Selecione pelo menos 1)</label>
+          <div id="novo-sinal-cats-box" class="max-h-36 overflow-y-auto p-3 rounded-xl border border-slate-300 bg-slate-50 grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Texto Explicativo</label>
@@ -507,8 +495,9 @@
         </div>
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Vídeos, Imagens e GIFs (Salvos no Google Drive)</label>
-          <input type="file" id="novo-sinal-arquivos" multiple accept="video/*,image/*"
-            class="w-full text-xs text-slate-600 file:mr-2 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:font-bold file:bg-[#043e40]/10 file:text-[#043e40]" />
+          <input type="file" id="novo-sinal-arquivos" multiple accept="video/*,image/*" onchange="selecionarArquivosNovoSinal(this)"
+            class="w-full text-xs text-slate-600 file:mr-2 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:font-bold file:bg-[#043e40]/10 file:text-[#043e40] cursor-pointer" />
+          <div id="novo-lista-arquivos-selecionados" class="mt-2.5 space-y-1.5"></div>
         </div>
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="fecharModal('modal-novo-sinal')" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">Cancelar</button>
@@ -520,30 +509,24 @@
     </div>
   </div>
 
-  <!-- MODAL 3: NOVA CATEGORIA / SUBCATEGORIAS ILIMITADAS -->
+  <!-- MODAL 3: NOVA OU EDITAR CATEGORIA -->
   <div id="modal-cat" class="fixed inset-0 bg-slate-950/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl fade-in">
       <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-        <h3 id="modal-cat-titulo" class="text-lg font-extrabold text-[#043e40]">Nova Categoria / Subcategorias</h3>
+        <h3 id="modal-cat-titulo" class="text-lg font-extrabold text-[#043e40]">Nova Categoria</h3>
         <button onclick="fecharModal('modal-cat')" class="text-2xl text-slate-400 hover:text-slate-700">&times;</button>
       </div>
       <form onsubmit="salvarCategoria(event)" class="space-y-4">
+        <input type="hidden" id="cat-nome-original" value="" />
         <div>
-          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Categoria Principal</label>
-          <input type="text" id="nova-cat-pai" list="datalist-cats-pai" required placeholder="Escolha existente ou digite uma nova"
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Nome da Categoria</label>
+          <input type="text" id="nova-cat-nome" required placeholder="Ex: Saudações, Verbos, Louvores..."
             class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-[#043e40]" />
-          <datalist id="datalist-cats-pai"></datalist>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Subcategoria(s)</label>
-          <textarea id="nova-subcat" rows="3" required placeholder="Digite uma ou várias subcategorias separadas por vírgula ou uma por linha&#10;Ex: Verbos, Expressões, Perguntas"
-            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-[#043e40]"></textarea>
-          <p class="text-[11px] text-slate-500 mt-1">Você pode adicionar quantas subcategorias desejar a qualquer momento.</p>
         </div>
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="fecharModal('modal-cat')" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600">Cancelar</button>
           <button type="submit" class="px-5 py-2.5 rounded-xl btn-vibrante text-white font-extrabold text-sm cursor-pointer">
-            Adicionar
+            Salvar Categoria
           </button>
         </div>
       </form>
@@ -560,7 +543,12 @@
     let sinais = [];
     let sinalAberto = null;
     let filtroCatAdm = null;
-    let filtroSubAdm = null;
+
+    // Filas de arquivos selecionados antes do envio (permitem remover individualmente)
+    let arquivosNovoSinalFila = [];
+    let arquivosDetalheFila = [];
+
+    const SEP_CATS = ' | ';
 
     const TITULOS_ABAS = {
       sinais: 'Comunidade Acervo em LIBRAS • Biblioteca & Comunidade',
@@ -590,6 +578,79 @@
       }`;
       el.classList.remove('hidden');
       setTimeout(() => el.classList.add('hidden'), 4000);
+    }
+
+    // --- UTILITÁRIOS DE MÚLTIPLAS CATEGORIAS POR SINAL ---
+    function obterCategoriasSinal(s) {
+      if (!s || !s.categoria_pai) return [];
+      return s.categoria_pai
+        .split('|')
+        .map(c => c.trim())
+        .filter(Boolean);
+    }
+
+    function formatarCategoriasSinal(listaCats) {
+      return [...new Set(listaCats.map(c => c.trim()).filter(Boolean))].join(SEP_CATS);
+    }
+
+    function formatarTamanhoArquivo(bytes) {
+      if (!bytes) return '';
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    }
+
+    // --- GERENCIAMENTO DA FILA DE ARQUIVOS (NOVO SINAL E DETALHE) ---
+    function selecionarArquivosNovoSinal(input) {
+      const novos = Array.from(input.files || []);
+      arquivosNovoSinalFila = [...arquivosNovoSinalFila, ...novos];
+      input.value = '';
+      renderizarFilaArquivos('novo');
+    }
+
+    function removerArquivoFilaNovo(index) {
+      arquivosNovoSinalFila.splice(index, 1);
+      renderizarFilaArquivos('novo');
+    }
+
+    function selecionarArquivosDetalhe(input) {
+      const novos = Array.from(input.files || []);
+      arquivosDetalheFila = [...arquivosDetalheFila, ...novos];
+      input.value = '';
+      renderizarFilaArquivos('detalhe');
+    }
+
+    function removerArquivoFilaDetalhe(index) {
+      arquivosDetalheFila.splice(index, 1);
+      renderizarFilaArquivos('detalhe');
+    }
+
+    function renderizarFilaArquivos(contexto) {
+      const isNovo = contexto === 'novo';
+      const fila = isNovo ? arquivosNovoSinalFila : arquivosDetalheFila;
+      const container = document.getElementById(isNovo ? 'novo-lista-arquivos-selecionados' : 'det-lista-arquivos-selecionados');
+      const fnRemover = isNovo ? 'removerArquivoFilaNovo' : 'removerArquivoFilaDetalhe';
+
+      if (!fila.length) {
+        container.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = fila.map((file, idx) => {
+        const tipo = detectarTipoArquivo(file);
+        const icone = tipo === 'VIDEO' ? 'fa-video text-pink-600' : 'fa-image text-teal-600';
+        return `
+          <div class="flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-slate-100 border border-slate-200 text-xs">
+            <div class="flex items-center gap-2 min-w-0">
+              <i class="fa-solid ${icone} shrink-0"></i>
+              <span class="font-semibold text-slate-800 truncate">${file.name}</span>
+              <span class="text-[10px] text-slate-500 shrink-0">(${formatarTamanhoArquivo(file.size)})</span>
+            </div>
+            <button type="button" onclick="${fnRemover}(${idx})" title="Remover este arquivo da seleção"
+              class="w-6 h-6 rounded-lg bg-red-100 hover:bg-red-600 text-red-600 hover:text-white flex items-center justify-center shrink-0 transition cursor-pointer">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>`;
+      }).join('');
     }
 
     // --- FUNÇÕES DE UPLOAD E EXCLUSÃO NO GOOGLE DRIVE ---
@@ -835,156 +896,186 @@
       return `<img src="${url}" class="w-full max-h-52 rounded-xl bg-slate-100 object-contain" />`;
     }
 
-    // --- 1. CATEGORIAS E SUBCATEGORIAS ILIMITADAS ---
+    // --- 1. CATEGORIAS (SEM SUBCATEGORIAS: ADICIONAR, EDITAR NOME E EXCLUIR EM CASCATA) ---
     async function carregarCategorias() {
-      const { data } = await db.from('categorias').select('*').order('ordem').order('subcategoria');
-      categorias = data || [];
-      const unicas = [...new Set(categorias.map(c => c.categoria_pai))];
+      const { data } = await db.from('categorias').select('*').order('categoria_pai');
+      const rows = data || [];
+      categorias = [...new Set(rows.map(c => c.categoria_pai).filter(Boolean))];
 
-      document.getElementById('datalist-cats-pai').innerHTML = unicas.map(c => `<option value="${c}">`).join('');
-      const optionsCats = unicas.map(c => `<option value="${c}">${c}</option>`).join('');
-      document.getElementById('novo-sinal-cat').innerHTML = optionsCats;
-      document.getElementById('det-edit-cat').innerHTML = optionsCats;
-      atualizarSubcatsNovo();
-
-      document.getElementById('lista-cats-adm').innerHTML = unicas.map(cat => {
-        const itensCat = categorias.filter(c => c.categoria_pai === cat);
-        const catEscapada = cat.replace(/'/g, "\\'");
+      document.getElementById('lista-cats-adm').innerHTML = categorias.length ? categorias.map(cat => {
+        const catEsc = cat.replace(/'/g, "\\'");
+        const selecionada = filtroCatAdm === cat;
+        const qtdSinais = sinais.filter(s => obterCategoriasSinal(s).includes(cat)).length;
         return `
-          <div class="border border-slate-200/80 rounded-xl overflow-hidden">
-            <div class="flex items-center justify-between bg-[#043e40]/10 hover:bg-[#043e40]/15 px-3 py-2 gap-1.5">
-              <button onclick="filtrarPorCategoriaAdm('${catEscapada}', null)"
-                class="flex-1 text-left text-xs font-extrabold text-[#043e40] truncate cursor-pointer">
-                ${cat} <span class="text-[10px] font-semibold text-slate-500">(${itensCat.length})</span>
-              </button>
-              <button onclick="abrirModalCategoria('${catEscapada}')" title="Adicionar subcategoria em ${cat}"
-                class="px-2 py-0.5 rounded-lg bg-[#043e40] hover:bg-[#06575a] text-white text-[10px] font-bold shrink-0 cursor-pointer">
-                + Sub
-              </button>
-              <button onclick="excluirCategoriaPai('${catEscapada}')" title="Excluir categoria inteira"
-                class="text-slate-400 hover:text-red-600 px-1.5 text-xs shrink-0 cursor-pointer">
-                <i class="fa-solid fa-trash-can"></i>
-              </button>
-            </div>
-            <div class="divide-y divide-slate-100 bg-white">
-              ${itensCat.map(item => `
-                <div class="flex items-center justify-between pl-4 pr-2.5 py-1.5 hover:bg-slate-50">
-                  <button onclick="filtrarPorCategoriaAdm('${catEscapada}', '${item.subcategoria.replace(/'/g, "\\'")}')"
-                    class="flex-1 text-left text-xs text-slate-600 hover:text-[#043e40] font-medium truncate cursor-pointer">
-                    › ${item.subcategoria}
-                  </button>
-                  <button onclick="excluirSubcategoria('${item.id}', '${item.subcategoria.replace(/'/g, "\\'")}')" title="Excluir subcategoria"
-                    class="text-slate-300 hover:text-red-600 px-1.5 text-[11px] cursor-pointer">
-                    <i class="fa-solid fa-xmark"></i>
-                  </button>
-                </div>`).join('')}
-            </div>
+          <div class="flex items-center justify-between gap-1.5 px-3 py-2.5 rounded-xl border transition ${
+            selecionada ? 'bg-[#043e40] text-white border-[#043e40]' : 'bg-slate-50 hover:bg-[#043e40]/10 text-[#043e40] border-slate-200/80'
+          }">
+            <button onclick="filtrarPorCategoriaAdm('${catEsc}')"
+              class="flex-1 text-left text-xs font-extrabold truncate cursor-pointer">
+              ${cat} <span class="text-[10px] font-semibold opacity-75">(${qtdSinais})</span>
+            </button>
+            <button onclick="abrirModalCategoria('${catEsc}')" title="Editar nome da categoria"
+              class="px-1.5 py-0.5 rounded-lg text-xs opacity-75 hover:opacity-100 cursor-pointer">
+              <i class="fa-solid fa-pen"></i>
+            </button>
+            <button onclick="excluirCategoria('${catEsc}')" title="Excluir categoria"
+              class="px-1.5 py-0.5 rounded-lg text-xs hover:text-red-500 opacity-75 hover:opacity-100 cursor-pointer">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
           </div>`;
+      }).join('') : '<p class="text-xs text-slate-400 text-center py-4">Nenhuma categoria cadastrada.</p>';
+    }
+
+    function renderizarCheckboxesCategorias(containerId, selecionadas = []) {
+      const box = document.getElementById(containerId);
+      if (!categorias.length) {
+        box.innerHTML = '<p class="text-xs text-red-600 font-semibold col-span-full">Cadastre pelo menos uma categoria primeiro.</p>';
+        return;
+      }
+      box.innerHTML = categorias.map(cat => {
+        const checked = selecionadas.includes(cat) ? 'checked' : '';
+        return `
+          <label class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 hover:border-[#043e40] text-xs font-semibold text-slate-800 cursor-pointer">
+            <input type="checkbox" value="${cat.replace(/"/g, '&quot;')}" ${checked} class="accent-[#043e40] rounded" />
+            <span class="truncate">${cat}</span>
+          </label>`;
       }).join('');
     }
 
-    async function excluirCategoriaPai(catPai) {
-      if (!confirm(`Excluir a categoria "${catPai}" e todas as suas subcategorias?`)) return;
-      showLoader('Excluindo categoria...');
-      const { error } = await db.from('categorias').delete().eq('categoria_pai', catPai);
-      hideLoader();
-      if (error) return toast(error.message, true);
-      if (filtroCatAdm === catPai) filtrarPorCategoriaAdm(null, null);
-      toast('Categoria excluída.');
-      carregarCategorias();
+    function obterCategoriasMarcadas(containerId) {
+      return Array.from(document.querySelectorAll(`#${containerId} input[type="checkbox"]:checked`))
+        .map(cb => cb.value.trim())
+        .filter(Boolean);
     }
 
-    async function excluirSubcategoria(id, nomeSub) {
-      if (!confirm(`Excluir a subcategoria "${nomeSub}"?`)) return;
-      showLoader('Excluindo subcategoria...');
-      const { error } = await db.from('categorias').delete().eq('id', id);
-      hideLoader();
-      if (error) return toast(error.message, true);
-      if (filtroSubAdm === nomeSub) filtrarPorCategoriaAdm(filtroCatAdm, null);
-      toast('Subcategoria excluída.');
-      carregarCategorias();
-    }
-
-    function filtrarPorCategoriaAdm(cat, sub) {
+    function filtrarPorCategoriaAdm(cat) {
       filtroCatAdm = cat;
-      filtroSubAdm = sub;
       document.getElementById('btn-limpar-cat').classList.toggle('hidden', !cat);
+      carregarCategorias();
       renderizarSinaisAdm();
     }
 
-    function atualizarSubcatsNovo() {
-      const cat = document.getElementById('novo-sinal-cat').value;
-      const subs = categorias.filter(c => c.categoria_pai === cat).map(c => c.subcategoria);
-      document.getElementById('novo-sinal-subcat').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
-    }
-
-    function atualizarSubcatsDetalhe() {
-      const cat = document.getElementById('det-edit-cat').value;
-      const subs = categorias.filter(c => c.categoria_pai === cat).map(c => c.subcategoria);
-      document.getElementById('det-edit-subcat').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
-    }
-
-    function abrirModalCategoria(catPreSelecionada = '') {
-      document.getElementById('nova-cat-pai').value = catPreSelecionada;
-      document.getElementById('nova-subcat').value = '';
-      document.getElementById('modal-cat-titulo').innerText = catPreSelecionada
-        ? `Adicionar Subcategoria em "${catPreSelecionada}"`
-        : 'Nova Categoria / Subcategorias';
+    function abrirModalCategoria(catParaEditar = '') {
+      document.getElementById('cat-nome-original').value = catParaEditar;
+      document.getElementById('nova-cat-nome').value = catParaEditar;
+      document.getElementById('modal-cat-titulo').innerText = catParaEditar
+        ? 'Editar Nome da Categoria'
+        : 'Nova Categoria';
       document.getElementById('modal-cat').classList.remove('hidden');
-      setTimeout(() => {
-        document.getElementById(catPreSelecionada ? 'nova-subcat' : 'nova-cat-pai').focus();
-      }, 50);
+      setTimeout(() => document.getElementById('nova-cat-nome').focus(), 50);
     }
 
     async function salvarCategoria(e) {
       e.preventDefault();
-      const catPai = document.getElementById('nova-cat-pai').value.trim();
-      const brutoSubcats = document.getElementById('nova-subcat').value;
+      const nomeOriginal = document.getElementById('cat-nome-original').value.trim();
+      const novoNome = document.getElementById('nova-cat-nome').value.trim();
+      if (!novoNome) return;
 
-      // Permite adicionar 1 ou várias subcategorias de uma vez (separadas por vírgula ou quebra de linha)
-      const listaSubcats = [...new Set(
-        brutoSubcats
-          .split(/[\n,;]+/)
-          .map(s => s.trim())
-          .filter(Boolean)
-      )];
+      // Modo Edição de Categoria Existente
+      if (nomeOriginal) {
+        if (nomeOriginal === novoNome) {
+          fecharModal('modal-cat');
+          return;
+        }
+        if (categorias.some(c => c.toLowerCase() === novoNome.toLowerCase())) {
+          return toast('Já existe uma categoria com esse nome.', true);
+        }
 
-      if (!catPai || !listaSubcats.length) {
-        return toast('Informe a categoria e pelo menos uma subcategoria.', true);
+        showLoader('Atualizando nome da categoria...');
+        const { error } = await db.from('categorias')
+          .update({ categoria_pai: novoNome, subcategoria: 'Geral' })
+          .eq('categoria_pai', nomeOriginal);
+
+        if (error) {
+          hideLoader();
+          return toast(error.message, true);
+        }
+
+        // Propaga o novo nome da categoria para todos os sinais que a utilizam
+        for (const s of sinais) {
+          const catsAtuais = obterCategoriasSinal(s);
+          if (catsAtuais.includes(nomeOriginal)) {
+            const atualizadas = catsAtuais.map(c => c === nomeOriginal ? novoNome : c);
+            await db.from('sinais')
+              .update({ categoria_pai: formatarCategoriasSinal(atualizadas) })
+              .eq('id', s.id);
+          }
+        }
+
+        if (filtroCatAdm === nomeOriginal) filtroCatAdm = novoNome;
+        hideLoader();
+        fecharModal('modal-cat');
+        toast('Nome da categoria atualizado!');
+        await atualizarTudo();
+        return;
       }
 
-      // Evita duplicar subcategoria que já exista na mesma categoria
-      const existentes = categorias
-        .filter(c => c.categoria_pai.toLowerCase() === catPai.toLowerCase())
-        .map(c => c.subcategoria.toLowerCase());
-
-      const novasParaInserir = listaSubcats
-        .filter(sub => !existentes.includes(sub.toLowerCase()))
-        .map(sub => ({
-          categoria_pai: catPai,
-          subcategoria: sub,
-          criado_por: admin.perfilNome
-        }));
-
-      if (!novasParaInserir.length) {
-        return toast('Essas subcategorias já existem nesta categoria.', true);
+      // Modo Criação de Nova Categoria
+      if (categorias.some(c => c.toLowerCase() === novoNome.toLowerCase())) {
+        return toast('Esta categoria já está cadastrada.', true);
       }
 
-      showLoader('Salvando subcategoria(s)...');
-      const { error } = await db.from('categorias').insert(novasParaInserir);
+      showLoader('Criando categoria...');
+      const { error } = await db.from('categorias').insert({
+        categoria_pai: novoNome,
+        subcategoria: 'Geral',
+        criado_por: admin.perfilNome
+      });
       hideLoader();
       if (error) return toast(error.message, true);
 
       fecharModal('modal-cat');
-      toast(`${novasParaInserir.length} subcategoria(s) adicionada(s) com sucesso!`);
-      carregarCategorias();
+      toast('Categoria criada!');
+      await carregarCategorias();
     }
 
-    // --- 2. SINAIS (GOOGLE DRIVE) ---
+    async function excluirCategoria(catAlvo) {
+      const sinaisAfetados = sinais.filter(s => obterCategoriasSinal(s).includes(catAlvo));
+      const sinaisQueSeraoExcluidos = sinaisAfetados.filter(s => obterCategoriasSinal(s).length === 1);
+
+      const avisoExtra = sinaisQueSeraoExcluidos.length
+        ? `\n\nATENÇÃO: ${sinaisQueSeraoExcluidos.length} sinal(is) pertencem APENAS a esta categoria e também serão excluídos permanentemente.`
+        : '';
+
+      if (!confirm(`Deseja excluir a categoria "${catAlvo}"?${avisoExtra}`)) return;
+
+      showLoader('Excluindo categoria e atualizando sinais...');
+
+      for (const s of sinaisAfetados) {
+        const restantes = obterCategoriasSinal(s).filter(c => c !== catAlvo);
+        if (restantes.length === 0) {
+          // O sinal ficou sem nenhuma categoria: exclui suas mídias no Drive e apaga o sinal
+          if (s.storage_path) await excluirArquivoDrive(s.storage_path);
+          if (Array.isArray(s.midias_extras)) {
+            for (const m of s.midias_extras) {
+              if (m.path) await excluirArquivoDrive(m.path);
+            }
+          }
+          await db.from('sinais').delete().eq('id', s.id);
+        } else {
+          // Mantém o sinal nas outras categorias restantes
+          await db.from('sinais')
+            .update({ categoria_pai: formatarCategoriasSinal(restantes) })
+            .eq('id', s.id);
+        }
+      }
+
+      const { error } = await db.from('categorias').delete().eq('categoria_pai', catAlvo);
+      hideLoader();
+      if (error) return toast(error.message, true);
+
+      if (filtroCatAdm === catAlvo) filtroCatAdm = null;
+      document.getElementById('btn-limpar-cat').classList.toggle('hidden', !filtroCatAdm);
+      toast('Categoria excluída.');
+      await atualizarTudo();
+    }
+
+    // --- 2. SINAIS (MÚLTIPLAS CATEGORIAS E GOOGLE DRIVE) ---
     async function carregarSinais() {
       const { data } = await db.from('sinais').select('*').order('atualizado_em', { ascending: false });
       sinais = data || [];
       document.getElementById('kpi-sinais').innerText = sinais.length;
+      carregarCategorias();
       renderizarSinaisAdm();
       if (sinalAberto) {
         const atualizado = sinais.find(item => item.id === sinalAberto.id);
@@ -994,24 +1085,27 @@
 
     function renderizarSinaisAdm() {
       const q = document.getElementById('busca-adm').value.toLowerCase().trim();
-      const lista = sinais.filter(s =>
-        (!filtroCatAdm || s.categoria_pai === filtroCatAdm) &&
-        (!filtroSubAdm || s.subcategoria === filtroSubAdm) &&
-        (!q || s.titulo_sinal.toLowerCase().includes(q) || s.texto_explicativo.toLowerCase().includes(q))
-      );
+      const lista = sinais.filter(s => {
+        const catsSinal = obterCategoriasSinal(s);
+        return (!filtroCatAdm || catsSinal.includes(filtroCatAdm)) &&
+          (!q || s.titulo_sinal.toLowerCase().includes(q) || s.texto_explicativo.toLowerCase().includes(q));
+      });
 
       document.getElementById('grid-sinais-adm').innerHTML = lista.length ? lista.map(s => {
         const midias = obterTodasMidiasSinal(s);
         const capa = midias[0];
+        const catsSinal = obterCategoriasSinal(s);
         return `
         <article onclick="abrirDetalheSinal('${s.id}')"
           class="bg-white rounded-2xl border border-slate-200/90 hover:border-[#043e40]/40 shadow-xs hover:shadow-md p-5 flex flex-col justify-between transition cursor-pointer fade-in group">
           <div>
-            <div class="flex items-center justify-between gap-2 mb-2.5">
-              <span class="text-[11px] font-bold px-3 py-1 rounded-full bg-[#043e40]/10 text-[#043e40]">
-                ${s.categoria_pai} • ${s.subcategoria}
-              </span>
-              <span class="text-[11px] font-extrabold text-pink-600">
+            <div class="flex items-start justify-between gap-2 mb-2.5">
+              <div class="flex flex-wrap gap-1.5">
+                ${catsSinal.map(c => `
+                  <span class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[#043e40]/10 text-[#043e40]">${c}</span>
+                `).join('')}
+              </div>
+              <span class="text-[11px] font-extrabold text-pink-600 shrink-0">
                 ${midias.length ? `${midias.length} mídia(s)` : 'TEXTO'}
               </span>
             </div>
@@ -1034,14 +1128,19 @@
       if (!s) return;
       sinalAberto = s;
 
-      document.getElementById('det-categoria-badge').innerText = `${s.categoria_pai} › ${s.subcategoria}`;
+      const catsSinal = obterCategoriasSinal(s);
+      document.getElementById('det-categoria-badge').innerHTML = catsSinal.map(c => `
+        <span class="text-[11px] font-extrabold uppercase tracking-wider px-3 py-0.5 rounded-full bg-white/15 text-amber-300">${c}</span>
+      `).join('');
+
       document.getElementById('det-titulo').innerText = s.titulo_sinal;
       document.getElementById('det-edit-titulo').value = s.titulo_sinal;
-      document.getElementById('det-edit-cat').value = s.categoria_pai;
-      atualizarSubcatsDetalhe();
-      document.getElementById('det-edit-subcat').value = s.subcategoria;
+      renderizarCheckboxesCategorias('det-edit-cats-box', catsSinal);
       document.getElementById('det-edit-texto').value = s.texto_explicativo;
+
+      arquivosDetalheFila = [];
       document.getElementById('det-novos-arquivos').value = '';
+      renderizarFilaArquivos('detalhe');
 
       const midias = obterTodasMidiasSinal(s);
       document.getElementById('det-total-midias').innerText = `${midias.length} arquivo(s)`;
@@ -1078,35 +1177,42 @@
     async function salvarEdicaoTextoSinal(e) {
       e.preventDefault();
       if (!sinalAberto) return;
+
+      const catsMarcadas = obterCategoriasMarcadas('det-edit-cats-box');
+      if (!catsMarcadas.length) {
+        return toast('Selecione pelo menos uma categoria para o sinal.', true);
+      }
+
       showLoader('Salvando alterações do sinal...');
       const { error } = await db.from('sinais').update({
         titulo_sinal: document.getElementById('det-edit-titulo').value.trim(),
-        categoria_pai: document.getElementById('det-edit-cat').value,
-        subcategoria: document.getElementById('det-edit-subcat').value,
+        categoria_pai: formatarCategoriasSinal(catsMarcadas),
+        subcategoria: 'Geral',
         texto_explicativo: document.getElementById('det-edit-texto').value.trim(),
         editado_por: admin.perfilNome,
         atualizado_em: new Date().toISOString()
       }).eq('id', sinalAberto.id);
       hideLoader();
       if (error) return toast(error.message, true);
-      toast('Texto e dados do sinal atualizados!');
+      toast('Dados e categorias do sinal atualizados!');
       carregarSinais();
     }
 
     async function adicionarMaisMidiasAoSinal(e) {
       e.preventDefault();
       if (!sinalAberto) return;
-      const files = Array.from(document.getElementById('det-novos-arquivos').files);
-      if (!files.length) return;
+      if (!arquivosDetalheFila.length) {
+        return toast('Escolha pelo menos um arquivo para anexar.', true);
+      }
 
       try {
-        showLoader(`Enviando ${files.length} arquivo(s) ao Google Drive...`);
+        showLoader(`Enviando ${arquivosDetalheFila.length} arquivo(s) ao Google Drive...`);
         const extrasAtuais = Array.isArray(sinalAberto.midias_extras) ? [...sinalAberto.midias_extras] : [];
         let urlPrincipal = sinalAberto.url_midia;
         let pathPrincipal = sinalAberto.storage_path;
         let tipoPrincipal = sinalAberto.tipo_midia;
 
-        for (const file of files) {
+        for (const file of arquivosDetalheFila) {
           const tipo = detectarTipoArquivo(file);
           const up = await uploadArquivoDrive(file, 'oficiais');
 
@@ -1130,6 +1236,8 @@
 
         hideLoader();
         if (error) return toast(error.message, true);
+        arquivosDetalheFila = [];
+        renderizarFilaArquivos('detalhe');
         toast('Novas mídias salvas no Google Drive!');
         carregarSinais();
       } catch (err) {
@@ -1195,22 +1303,32 @@
     }
 
     function abrirModalNovoSinal() {
+      if (!categorias.length) {
+        return toast('Cadastre pelo menos uma categoria antes de criar um sinal.', true);
+      }
       document.getElementById('novo-sinal-titulo').value = '';
       document.getElementById('novo-sinal-texto').value = '';
       document.getElementById('novo-sinal-arquivos').value = '';
+      arquivosNovoSinalFila = [];
+      renderizarFilaArquivos('novo');
+      renderizarCheckboxesCategorias('novo-sinal-cats-box', filtroCatAdm ? [filtroCatAdm] : []);
       document.getElementById('modal-novo-sinal').classList.remove('hidden');
     }
 
     async function criarNovoSinal(e) {
       e.preventDefault();
-      const files = Array.from(document.getElementById('novo-sinal-arquivos').files);
+      const catsMarcadas = obterCategoriasMarcadas('novo-sinal-cats-box');
+      if (!catsMarcadas.length) {
+        return toast('Selecione pelo menos uma categoria para salvar o sinal.', true);
+      }
+
       try {
-        showLoader(files.length ? `Enviando ${files.length} arquivo(s) para o Google Drive...` : 'Cadastrando sinal...');
+        showLoader(arquivosNovoSinalFila.length ? `Enviando ${arquivosNovoSinalFila.length} arquivo(s) para o Google Drive...` : 'Cadastrando sinal...');
         let urlPrincipal = null, pathPrincipal = null, tipoPrincipal = 'TEXTO';
         const extras = [];
 
-        for (let i = 0; i < files.length; i++) {
-          const file = files[i];
+        for (let i = 0; i < arquivosNovoSinalFila.length; i++) {
+          const file = arquivosNovoSinalFila[i];
           const tipo = detectarTipoArquivo(file);
           const up = await uploadArquivoDrive(file, 'oficiais');
 
@@ -1223,8 +1341,8 @@
 
         const { error } = await db.from('sinais').insert({
           titulo_sinal: document.getElementById('novo-sinal-titulo').value.trim(),
-          categoria_pai: document.getElementById('novo-sinal-cat').value,
-          subcategoria: document.getElementById('novo-sinal-subcat').value,
+          categoria_pai: formatarCategoriasSinal(catsMarcadas),
+          subcategoria: 'Geral',
           texto_explicativo: document.getElementById('novo-sinal-texto').value.trim(),
           tipo_midia: tipoPrincipal,
           url_midia: urlPrincipal,
@@ -1235,6 +1353,7 @@
 
         hideLoader();
         if (error) return toast(error.message, true);
+        arquivosNovoSinalFila = [];
         fecharModal('modal-novo-sinal');
         toast('Sinal salvo com sucesso no Google Drive!');
         carregarSinais();
@@ -1306,7 +1425,7 @@
         return `
         <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50/70">
           <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <span class="text-xs font-bold text-slate-600">@${s.usuario_perfil} • ${s.categoria_sugerida} › ${s.subcategoria_sugerida} • ${midias.length} anexo(s)</span>
+            <span class="text-xs font-bold text-slate-600">@${s.usuario_perfil} • ${s.categoria_sugerida} • ${midias.length} anexo(s)</span>
             <span class="text-[11px] font-extrabold px-3 py-0.5 rounded-full ${s.status_sugestao === 'FINALIZADO' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
               ${s.status_sugestao}
             </span>
@@ -1347,10 +1466,14 @@
       }).eq('id', s.id);
 
       if (publicar) {
+        const catDestino = categorias.includes(s.categoria_sugerida)
+          ? s.categoria_sugerida
+          : (categorias[0] || s.categoria_sugerida);
+
         await db.from('sinais').insert({
           titulo_sinal: s.titulo_sinal,
-          categoria_pai: s.categoria_sugerida,
-          subcategoria: s.subcategoria_sugerida,
+          categoria_pai: catDestino,
+          subcategoria: 'Geral',
           texto_explicativo: s.texto_sugestao,
           tipo_midia: s.tipo_midia,
           url_midia: s.url_midia,
