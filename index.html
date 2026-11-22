@@ -298,7 +298,7 @@
             <div id="grid-sinais-adm" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
           </div>
 
-          <!-- PAINEL DE CATEGORIAS (SEM SUBCATEGORIAS, COM CRIAR / EDITAR / EXCLUIR) -->
+          <!-- PAINEL DE CATEGORIAS -->
           <aside class="w-full xl:w-80 shrink-0">
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sticky top-20">
               <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
@@ -534,7 +534,7 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- JAVASCRIPT DO PAINEL ADMINISTRATIVO (INTEGRAÇÃO GOOGLE DRIVE)           -->
+  <!-- JAVASCRIPT DO PAINEL ADMINISTRATIVO (ORDEM ALFABÉTICA + GOOGLE DRIVE)  -->
   <!-- ======================================================================= -->
   <script>
     const db = window.supabase.createClient(SUPABASE_CONFIG.URL, SUPABASE_CONFIG.ANON_KEY);
@@ -544,7 +544,6 @@
     let sinalAberto = null;
     let filtroCatAdm = null;
 
-    // Filas de arquivos selecionados antes do envio (permitem remover individualmente)
     let arquivosNovoSinalFila = [];
     let arquivosDetalheFila = [];
 
@@ -580,7 +579,13 @@
       setTimeout(() => el.classList.add('hidden'), 4000);
     }
 
-    // --- UTILITÁRIOS DE MÚLTIPLAS CATEGORIAS POR SINAL ---
+    // --- ORDENAÇÃO ALFABÉTICA DE SINAIS ---
+    function ordenarAlfabeticamenteSinais(lista) {
+      return [...lista].sort((a, b) =>
+        (a.titulo_sinal || '').localeCompare(b.titulo_sinal || '', 'pt-BR', { sensitivity: 'base' })
+      );
+    }
+
     function obterCategoriasSinal(s) {
       if (!s || !s.categoria_pai) return [];
       return s.categoria_pai
@@ -599,7 +604,6 @@
       return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
     }
 
-    // --- GERENCIAMENTO DA FILA DE ARQUIVOS (NOVO SINAL E DETALHE) ---
     function selecionarArquivosNovoSinal(input) {
       const novos = Array.from(input.files || []);
       arquivosNovoSinalFila = [...arquivosNovoSinalFila, ...novos];
@@ -653,7 +657,6 @@
       }).join('');
     }
 
-    // --- FUNÇÕES DE UPLOAD E EXCLUSÃO NO GOOGLE DRIVE ---
     function arquivoParaBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -896,11 +899,12 @@
       return `<img src="${url}" class="w-full max-h-52 rounded-xl bg-slate-100 object-contain" />`;
     }
 
-    // --- 1. CATEGORIAS (SEM SUBCATEGORIAS: ADICIONAR, EDITAR NOME E EXCLUIR EM CASCATA) ---
+    // --- 1. CATEGORIAS ---
     async function carregarCategorias() {
-      const { data } = await db.from('categorias').select('*').order('categoria_pai');
+      const { data } = await db.from('categorias').select('*').order('categoria_pai', { ascending: true });
       const rows = data || [];
-      categorias = [...new Set(rows.map(c => c.categoria_pai).filter(Boolean))];
+      categorias = [...new Set(rows.map(c => c.categoria_pai).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, 'pt-BR', { sensitivity: 'base' }));
 
       document.getElementById('lista-cats-adm').innerHTML = categorias.length ? categorias.map(cat => {
         const catEsc = cat.replace(/'/g, "\\'");
@@ -971,7 +975,6 @@
       const novoNome = document.getElementById('nova-cat-nome').value.trim();
       if (!novoNome) return;
 
-      // Modo Edição de Categoria Existente
       if (nomeOriginal) {
         if (nomeOriginal === novoNome) {
           fecharModal('modal-cat');
@@ -991,7 +994,6 @@
           return toast(error.message, true);
         }
 
-        // Propaga o novo nome da categoria para todos os sinais que a utilizam
         for (const s of sinais) {
           const catsAtuais = obterCategoriasSinal(s);
           if (catsAtuais.includes(nomeOriginal)) {
@@ -1010,7 +1012,6 @@
         return;
       }
 
-      // Modo Criação de Nova Categoria
       if (categorias.some(c => c.toLowerCase() === novoNome.toLowerCase())) {
         return toast('Esta categoria já está cadastrada.', true);
       }
@@ -1044,7 +1045,6 @@
       for (const s of sinaisAfetados) {
         const restantes = obterCategoriasSinal(s).filter(c => c !== catAlvo);
         if (restantes.length === 0) {
-          // O sinal ficou sem nenhuma categoria: exclui suas mídias no Drive e apaga o sinal
           if (s.storage_path) await excluirArquivoDrive(s.storage_path);
           if (Array.isArray(s.midias_extras)) {
             for (const m of s.midias_extras) {
@@ -1053,7 +1053,6 @@
           }
           await db.from('sinais').delete().eq('id', s.id);
         } else {
-          // Mantém o sinal nas outras categorias restantes
           await db.from('sinais')
             .update({ categoria_pai: formatarCategoriasSinal(restantes) })
             .eq('id', s.id);
@@ -1070,10 +1069,10 @@
       await atualizarTudo();
     }
 
-    // --- 2. SINAIS (MÚLTIPLAS CATEGORIAS E GOOGLE DRIVE) ---
+    // --- 2. SINAIS (ORDEM ALFABÉTICA + MÚLTIPLAS CATEGORIAS + GOOGLE DRIVE) ---
     async function carregarSinais() {
-      const { data } = await db.from('sinais').select('*').order('atualizado_em', { ascending: false });
-      sinais = data || [];
+      const { data } = await db.from('sinais').select('*').order('titulo_sinal', { ascending: true });
+      sinais = ordenarAlfabeticamenteSinais(data || []);
       document.getElementById('kpi-sinais').innerText = sinais.length;
       carregarCategorias();
       renderizarSinaisAdm();
@@ -1085,11 +1084,12 @@
 
     function renderizarSinaisAdm() {
       const q = document.getElementById('busca-adm').value.toLowerCase().trim();
-      const lista = sinais.filter(s => {
+      const filtrados = sinais.filter(s => {
         const catsSinal = obterCategoriasSinal(s);
         return (!filtroCatAdm || catsSinal.includes(filtroCatAdm)) &&
           (!q || s.titulo_sinal.toLowerCase().includes(q) || s.texto_explicativo.toLowerCase().includes(q));
       });
+      const lista = ordenarAlfabeticamenteSinais(filtrados);
 
       document.getElementById('grid-sinais-adm').innerHTML = lista.length ? lista.map(s => {
         const midias = obterTodasMidiasSinal(s);
