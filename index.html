@@ -520,11 +520,11 @@
     </div>
   </div>
 
-  <!-- MODAL 3: NOVA CATEGORIA / SUBCATEGORIA -->
+  <!-- MODAL 3: NOVA CATEGORIA / SUBCATEGORIAS ILIMITADAS -->
   <div id="modal-cat" class="fixed inset-0 bg-slate-950/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl fade-in">
       <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-        <h3 class="text-lg font-extrabold text-[#043e40]">Nova Categoria / Subcategoria</h3>
+        <h3 id="modal-cat-titulo" class="text-lg font-extrabold text-[#043e40]">Nova Categoria / Subcategorias</h3>
         <button onclick="fecharModal('modal-cat')" class="text-2xl text-slate-400 hover:text-slate-700">&times;</button>
       </div>
       <form onsubmit="salvarCategoria(event)" class="space-y-4">
@@ -535,9 +535,10 @@
           <datalist id="datalist-cats-pai"></datalist>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Subcategoria</label>
-          <input type="text" id="nova-subcat" required placeholder="Ex: Verbos e Ações"
-            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-[#043e40]" />
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Subcategoria(s)</label>
+          <textarea id="nova-subcat" rows="3" required placeholder="Digite uma ou várias subcategorias separadas por vírgula ou uma por linha&#10;Ex: Verbos, Expressões, Perguntas"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-[#043e40]"></textarea>
+          <p class="text-[11px] text-slate-500 mt-1">Você pode adicionar quantas subcategorias desejar a qualquer momento.</p>
         </div>
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="fecharModal('modal-cat')" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600">Cancelar</button>
@@ -823,7 +824,6 @@
       return 'IMAGEM';
     }
 
-    // Renderiza player do Google Drive (iframe para vídeo do Drive, video tag se MP4 direto, img para fotos/GIFs)
     function renderMidiaCard(tipo, url) {
       if (!url || tipo === 'TEXTO') return '';
       if (tipo === 'VIDEO') {
@@ -835,9 +835,9 @@
       return `<img src="${url}" class="w-full max-h-52 rounded-xl bg-slate-100 object-contain" />`;
     }
 
-    // --- 1. CATEGORIAS ---
+    // --- 1. CATEGORIAS E SUBCATEGORIAS ILIMITADAS ---
     async function carregarCategorias() {
-      const { data } = await db.from('categorias').select('*').order('ordem');
+      const { data } = await db.from('categorias').select('*').order('ordem').order('subcategoria');
       categorias = data || [];
       const unicas = [...new Set(categorias.map(c => c.categoria_pai))];
 
@@ -849,22 +849,27 @@
 
       document.getElementById('lista-cats-adm').innerHTML = unicas.map(cat => {
         const itensCat = categorias.filter(c => c.categoria_pai === cat);
+        const catEscapada = cat.replace(/'/g, "\\'");
         return `
           <div class="border border-slate-200/80 rounded-xl overflow-hidden">
-            <div class="flex items-center justify-between bg-[#043e40]/10 hover:bg-[#043e40]/15 px-3 py-2">
-              <button onclick="filtrarPorCategoriaAdm('${cat.replace(/'/g, "\\'")}', null)"
+            <div class="flex items-center justify-between bg-[#043e40]/10 hover:bg-[#043e40]/15 px-3 py-2 gap-1.5">
+              <button onclick="filtrarPorCategoriaAdm('${catEscapada}', null)"
                 class="flex-1 text-left text-xs font-extrabold text-[#043e40] truncate cursor-pointer">
-                ${cat}
+                ${cat} <span class="text-[10px] font-semibold text-slate-500">(${itensCat.length})</span>
               </button>
-              <button onclick="excluirCategoriaPai('${cat.replace(/'/g, "\\'")}')" title="Excluir categoria inteira"
-                class="text-slate-400 hover:text-red-600 px-1.5 text-xs cursor-pointer">
+              <button onclick="abrirModalCategoria('${catEscapada}')" title="Adicionar subcategoria em ${cat}"
+                class="px-2 py-0.5 rounded-lg bg-[#043e40] hover:bg-[#06575a] text-white text-[10px] font-bold shrink-0 cursor-pointer">
+                + Sub
+              </button>
+              <button onclick="excluirCategoriaPai('${catEscapada}')" title="Excluir categoria inteira"
+                class="text-slate-400 hover:text-red-600 px-1.5 text-xs shrink-0 cursor-pointer">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
             <div class="divide-y divide-slate-100 bg-white">
               ${itensCat.map(item => `
                 <div class="flex items-center justify-between pl-4 pr-2.5 py-1.5 hover:bg-slate-50">
-                  <button onclick="filtrarPorCategoriaAdm('${cat.replace(/'/g, "\\'")}', '${item.subcategoria.replace(/'/g, "\\'")}')"
+                  <button onclick="filtrarPorCategoriaAdm('${catEscapada}', '${item.subcategoria.replace(/'/g, "\\'")}')"
                     class="flex-1 text-left text-xs text-slate-600 hover:text-[#043e40] font-medium truncate cursor-pointer">
                     › ${item.subcategoria}
                   </button>
@@ -919,24 +924,59 @@
       document.getElementById('det-edit-subcat').innerHTML = subs.map(s => `<option value="${s}">${s}</option>`).join('');
     }
 
-    function abrirModalCategoria() {
-      document.getElementById('nova-cat-pai').value = '';
+    function abrirModalCategoria(catPreSelecionada = '') {
+      document.getElementById('nova-cat-pai').value = catPreSelecionada;
       document.getElementById('nova-subcat').value = '';
+      document.getElementById('modal-cat-titulo').innerText = catPreSelecionada
+        ? `Adicionar Subcategoria em "${catPreSelecionada}"`
+        : 'Nova Categoria / Subcategorias';
       document.getElementById('modal-cat').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById(catPreSelecionada ? 'nova-subcat' : 'nova-cat-pai').focus();
+      }, 50);
     }
 
     async function salvarCategoria(e) {
       e.preventDefault();
-      showLoader('Adicionando categoria...');
-      const { error } = await db.from('categorias').insert({
-        categoria_pai: document.getElementById('nova-cat-pai').value.trim(),
-        subcategoria: document.getElementById('nova-subcat').value.trim(),
-        criado_por: admin.perfilNome
-      });
+      const catPai = document.getElementById('nova-cat-pai').value.trim();
+      const brutoSubcats = document.getElementById('nova-subcat').value;
+
+      // Permite adicionar 1 ou várias subcategorias de uma vez (separadas por vírgula ou quebra de linha)
+      const listaSubcats = [...new Set(
+        brutoSubcats
+          .split(/[\n,;]+/)
+          .map(s => s.trim())
+          .filter(Boolean)
+      )];
+
+      if (!catPai || !listaSubcats.length) {
+        return toast('Informe a categoria e pelo menos uma subcategoria.', true);
+      }
+
+      // Evita duplicar subcategoria que já exista na mesma categoria
+      const existentes = categorias
+        .filter(c => c.categoria_pai.toLowerCase() === catPai.toLowerCase())
+        .map(c => c.subcategoria.toLowerCase());
+
+      const novasParaInserir = listaSubcats
+        .filter(sub => !existentes.includes(sub.toLowerCase()))
+        .map(sub => ({
+          categoria_pai: catPai,
+          subcategoria: sub,
+          criado_por: admin.perfilNome
+        }));
+
+      if (!novasParaInserir.length) {
+        return toast('Essas subcategorias já existem nesta categoria.', true);
+      }
+
+      showLoader('Salvando subcategoria(s)...');
+      const { error } = await db.from('categorias').insert(novasParaInserir);
       hideLoader();
       if (error) return toast(error.message, true);
+
       fecharModal('modal-cat');
-      toast('Categoria adicionada!');
+      toast(`${novasParaInserir.length} subcategoria(s) adicionada(s) com sucesso!`);
       carregarCategorias();
     }
 
