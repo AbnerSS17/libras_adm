@@ -14,7 +14,6 @@
     body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; background-color: #f3f6f6; }
     .fade-in { animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1); }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-    /* Paleta Institucional Verde Petróleo + Gradiente Vibrante */
     .bg-petroleo { background-color: #043e40; }
     .bg-petroleo-dark { background-color: #022a2c; }
     .text-petroleo { color: #043e40; }
@@ -35,10 +34,8 @@
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col antialiased selection:bg-[#043e40] selection:text-white">
 
-  <!-- TOAST DE NOTIFICAÇÃO -->
   <div id="toast" class="fixed bottom-5 right-5 z-[60] hidden max-w-sm px-5 py-3.5 rounded-2xl shadow-2xl text-white font-semibold text-sm flex items-center gap-3 fade-in"></div>
 
-  <!-- LOADER GLOBAL -->
   <div id="loader" class="fixed inset-0 bg-slate-950/65 backdrop-blur-xs z-[60] hidden flex items-center justify-center">
     <div class="bg-[#022a2c] border border-teal-800/60 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3.5">
       <div class="w-6 h-6 border-3 border-pink-500 border-t-amber-400 rounded-full animate-spin"></div>
@@ -52,7 +49,6 @@
   <section id="tela-auth" class="flex-1 flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#064e51] via-[#043e40] to-[#011b1c]">
     <div class="w-full max-w-md bg-[#022a2c]/95 backdrop-blur-md border border-teal-800/50 text-white rounded-3xl shadow-2xl overflow-hidden fade-in">
       <div class="p-7 pb-6 text-center border-b border-teal-900/60 relative">
-        <!-- Emblema Circular com Borda Gradiente -->
         <div class="w-20 h-20 mx-auto mb-3.5 rounded-full p-[3px] ring-vibrante shadow-xl">
           <div class="w-full h-full rounded-full bg-[#043e40] flex items-center justify-center text-white text-2xl">
             <i class="fa-solid fa-hands-asl-interpreting"></i>
@@ -65,7 +61,6 @@
         <p class="text-xs text-teal-200/75 mt-1">Biblioteca & Comunidade • Curadoria e Moderação</p>
       </div>
 
-      <!-- Abas Login / Cadastrar Novo ADM -->
       <div class="grid grid-cols-2 text-xs font-extrabold uppercase tracking-wider border-b border-teal-900/70 bg-[#011b1c]/60">
         <button id="tab-adm-login" onclick="alternarAuthAdm('LOGIN')" class="py-3.5 text-amber-300 bg-[#022a2c] border-b-2 border-amber-400 cursor-pointer">
           <i class="fa-solid fa-right-to-bracket mr-1"></i> Entrar
@@ -75,7 +70,6 @@
         </button>
       </div>
 
-      <!-- FORMULÁRIO LOGIN ADM -->
       <form id="form-adm-login" onsubmit="executarLoginAdmin(event)" class="p-7 space-y-5">
         <div>
           <label class="block text-xs font-bold text-teal-200/80 uppercase tracking-wider mb-1.5">Usuário Administrador</label>
@@ -102,7 +96,6 @@
         </button>
       </form>
 
-      <!-- FORMULÁRIO CADASTRAR NOVO ADM COM SENHA SEGURA -->
       <form id="form-adm-cadastro" onsubmit="executarCadastroAdmin(event)" class="p-7 space-y-4 hidden">
         <div>
           <label class="block text-xs font-bold text-teal-200/80 uppercase tracking-wider mb-1">Nome Completo do ADM</label>
@@ -123,8 +116,6 @@
               <i class="fa-regular fa-eye"></i>
             </button>
           </div>
-
-          <!-- Barra de Força da Senha -->
           <div class="mt-2">
             <div class="flex items-center justify-between text-[11px] font-bold mb-1">
               <span class="text-teal-300/70">Nível de segurança:</span>
@@ -134,8 +125,6 @@
               <div id="adm-senha-forca-barra" class="h-full w-0 bg-red-500 transition-all duration-300"></div>
             </div>
           </div>
-
-          <!-- Requisitos de Senha Segura -->
           <ul class="mt-2.5 p-3 rounded-xl bg-[#011b1c]/80 border border-teal-800/60 space-y-1 text-[11px] font-semibold">
             <li id="adm-req-len" class="text-teal-300/60 flex items-center gap-1.5"><i class="fa-regular fa-circle"></i> Mínimo de 8 caracteres</li>
             <li id="adm-req-upper" class="text-teal-300/60 flex items-center gap-1.5"><i class="fa-regular fa-circle"></i> Pelo menos 1 letra maiúscula (A-Z)</li>
@@ -144,14 +133,12 @@
             <li id="adm-req-spec" class="text-teal-300/60 flex items-center gap-1.5"><i class="fa-regular fa-circle"></i> Pelo menos 1 símbolo (!@#$%&*...)</li>
           </ul>
         </div>
-
         <div>
           <label class="block text-xs font-bold text-teal-200/80 uppercase tracking-wider mb-1">Confirmar Senha</label>
           <input type="password" id="cad-adm-senha-confirma" required oninput="validarForcaSenhaAdm()" placeholder="Repita a senha"
             class="w-full px-4 py-3 rounded-xl bg-[#011b1c]/80 border border-teal-800/70 text-white placeholder-teal-600 focus:ring-2 focus:ring-pink-500 outline-none transition" />
           <p id="adm-msg-confirma-senha" class="hidden text-[11px] font-bold text-red-400 mt-1">As senhas não coincidem.</p>
         </div>
-
         <button type="submit"
           class="w-full py-3.5 rounded-xl ring-vibrante hover:opacity-95 text-white font-extrabold shadow-lg transition cursor-pointer">
           Cadastrar Novo Administrador
@@ -161,17 +148,13 @@
   </section>
 
   <!-- ======================================================================= -->
-  <!-- TELA 2: DASHBOARD ADMINISTRATIVO RESPONSIVO (DESKTOP / TABLET / MOBILE) -->
+  <!-- TELA 2: DASHBOARD ADMINISTRATIVO                                        -->
   <!-- ======================================================================= -->
   <div id="tela-app" class="hidden flex-1 flex flex-col lg:flex-row">
-
-    <!-- BACKDROP MENU MOBILE -->
     <div id="mobile-backdrop" onclick="toggleMenuMobile(false)" class="fixed inset-0 bg-slate-950/60 z-30 hidden lg:hidden"></div>
 
-    <!-- SIDEBAR LATERAL (VERDE PETRÓLEO) -->
     <aside id="sidebar" class="fixed lg:sticky top-0 left-0 z-40 h-screen w-72 bg-[#022a2c] text-teal-100/80 flex flex-col justify-between transition-transform duration-300 -translate-x-full lg:translate-x-0 border-r border-teal-900/50 shrink-0">
       <div>
-        <!-- Marca -->
         <div class="h-16 px-6 flex items-center justify-between border-b border-teal-900/60">
           <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full p-[2px] ring-vibrante shrink-0">
@@ -189,36 +172,30 @@
           </button>
         </div>
 
-        <!-- Links de Navegação -->
         <nav class="p-4 space-y-1.5">
           <button onclick="mudarAba('sinais')" id="nav-sinais"
             class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold ring-vibrante text-white shadow-md transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-photo-film w-4"></i> Acervo de Sinais</span>
           </button>
-
           <button onclick="mudarAba('comentarios')" id="nav-comentarios"
             class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-teal-200/75 hover:bg-[#043e40] hover:text-white transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-comment-dots w-4"></i> Comentários</span>
             <span id="badge-com" class="hidden px-2 py-0.5 rounded-full bg-pink-600 text-white text-[10px] font-extrabold">0</span>
           </button>
-
           <button onclick="mudarAba('sugestoes')" id="nav-sugestoes"
             class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-teal-200/75 hover:bg-[#043e40] hover:text-white transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-lightbulb w-4"></i> Sugestões</span>
             <span id="badge-sug" class="hidden px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 text-[10px] font-extrabold">0</span>
           </button>
-
           <button onclick="mudarAba('forum')" id="nav-forum"
             class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-teal-200/75 hover:bg-[#043e40] hover:text-white transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-comments w-4"></i> Fórum</span>
           </button>
-
           <button onclick="mudarAba('mensagens')" id="nav-mensagens"
             class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-teal-200/75 hover:bg-[#043e40] hover:text-white transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-envelope w-4"></i> Mensagens</span>
             <span id="badge-msg" class="hidden px-2 py-0.5 rounded-full bg-purple-500 text-white text-[10px] font-extrabold">0</span>
           </button>
-
           <button onclick="mudarAba('usuarios')" id="nav-usuarios"
             class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-teal-200/75 hover:bg-[#043e40] hover:text-white transition cursor-pointer">
             <span class="flex items-center gap-3"><i class="fa-solid fa-users-gear w-4"></i> Usuários</span>
@@ -226,7 +203,6 @@
         </nav>
       </div>
 
-      <!-- Rodapé Perfil ADM -->
       <div class="p-4 border-t border-teal-900/60">
         <div class="flex items-center justify-between bg-[#043e40]/80 p-3 rounded-2xl border border-teal-800/40">
           <div class="min-w-0">
@@ -240,10 +216,7 @@
       </div>
     </aside>
 
-    <!-- CONTEÚDO PRINCIPAL -->
     <div class="flex-1 flex flex-col min-w-0">
-
-      <!-- TOPBAR -->
       <header class="bg-white border-b border-slate-200/90 sticky top-0 z-20 px-4 sm:px-8 h-16 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <button onclick="toggleMenuMobile(true)" class="lg:hidden p-2 rounded-xl text-[#043e40] hover:bg-teal-50">
@@ -258,7 +231,7 @@
         </button>
       </header>
 
-      <!-- CARDS DE RESUMO (KPIs) -->
+      <!-- KPIs -->
       <div class="max-w-7xl w-full mx-auto px-4 sm:px-8 pt-6">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
@@ -270,7 +243,6 @@
               <p id="kpi-sinais" class="text-xl font-extrabold text-[#043e40]">0</p>
             </div>
           </div>
-
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
             <div class="w-11 h-11 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center text-lg shrink-0">
               <i class="fa-solid fa-comment-dots"></i>
@@ -280,7 +252,6 @@
               <p id="kpi-comentarios" class="text-xl font-extrabold text-slate-900">0</p>
             </div>
           </div>
-
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
             <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg shrink-0">
               <i class="fa-solid fa-lightbulb"></i>
@@ -290,7 +261,6 @@
               <p id="kpi-sugestoes" class="text-xl font-extrabold text-slate-900">0</p>
             </div>
           </div>
-
           <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-3.5">
             <div class="w-11 h-11 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg shrink-0">
               <i class="fa-solid fa-users"></i>
@@ -303,12 +273,9 @@
         </div>
       </div>
 
-      <!-- =================================================================== -->
-      <!-- ABA 1: GERENCIAR ACERVO OFICIAL + CATEGORIAS À DIREITA              -->
-      <!-- =================================================================== -->
+      <!-- ABA 1: ACERVO OFICIAL -->
       <main id="sec-sinais" class="max-w-7xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
         <div class="flex flex-col xl:flex-row gap-6">
-          <!-- Lista de Sinais -->
           <div class="flex-1 min-w-0">
             <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs mb-5 flex flex-col sm:flex-row gap-3 justify-between">
               <div class="relative flex-1">
@@ -331,7 +298,6 @@
             <div id="grid-sinais-adm" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
           </div>
 
-          <!-- Painel Direito de Categorias e Subcategorias (COM EXCLUSÃO) -->
           <aside class="w-full xl:w-80 shrink-0">
             <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-5 sticky top-20">
               <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
@@ -353,9 +319,7 @@
         </div>
       </main>
 
-      <!-- =================================================================== -->
-      <!-- ABA 2: COMENTÁRIOS DOS USUÁRIOS SOBRE VÍDEOS / SINAIS               -->
-      <!-- =================================================================== -->
+      <!-- ABA 2: COMENTÁRIOS -->
       <main id="sec-comentarios" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
         <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
           <div class="mb-5 pb-3 border-b border-slate-100">
@@ -366,29 +330,23 @@
         </div>
       </main>
 
-      <!-- =================================================================== -->
-      <!-- ABA 3: SUGESTÕES (EM ANÁLISE -> FINALIZADO + RESPOSTA ADM)          -->
-      <!-- =================================================================== -->
+      <!-- ABA 3: SUGESTÕES -->
       <main id="sec-sugestoes" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
         <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
           <div class="mb-5 pb-3 border-b border-slate-100">
-            <h3 class="text-lg font-extrabold text-[#043e40]">Sugestões de Conteúdo (Texto, Vídeo, Imagem e GIF)</h3>
+            <h3 class="text-lg font-extrabold text-[#043e40]">Sugestões de Conteúdo (Google Drive)</h3>
             <p class="text-xs text-slate-500">Analise as mídias sugeridas, envie uma resposta oficial e finalize ou publique na biblioteca.</p>
           </div>
           <div id="lista-sugestoes-adm" class="space-y-4"></div>
         </div>
       </main>
 
-      <!-- =================================================================== -->
-      <!-- ABA 4: MODERAÇÃO DO FÓRUM                                           -->
-      <!-- =================================================================== -->
+      <!-- ABA 4: FÓRUM -->
       <main id="sec-forum" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
         <div id="lista-forum-adm" class="space-y-4"></div>
       </main>
 
-      <!-- =================================================================== -->
-      <!-- ABA 5: MENSAGENS DIRETAS                                            -->
-      <!-- =================================================================== -->
+      <!-- ABA 5: MENSAGENS -->
       <main id="sec-mensagens" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs h-fit">
@@ -413,9 +371,7 @@
         </div>
       </main>
 
-      <!-- =================================================================== -->
-      <!-- ABA 6: CONTROLE DE USUÁRIOS                                         -->
-      <!-- =================================================================== -->
+      <!-- ABA 6: USUÁRIOS -->
       <main id="sec-usuarios" class="hidden max-w-5xl w-full mx-auto px-4 sm:px-8 py-6 flex-1">
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
           <div class="p-5 border-b border-slate-100">
@@ -437,18 +393,12 @@
           </div>
         </div>
       </main>
-
     </div>
   </div>
 
-  <!-- ======================================================================= -->
-  <!-- MODAL 1: VISUALIZAÇÃO AMPLIADA DO SINAL (MAIOR PORCENTAGEM DA TELA)     -->
-  <!--          PERMITE VER TUDO, EDITAR TEXTO E ADICIONAR + VÍDEOS/FOTOS/GIFS -->
-  <!-- ======================================================================= -->
+  <!-- MODAL 1: VISUALIZAÇÃO AMPLIADA DO SINAL -->
   <div id="modal-detalhe-sinal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4">
     <div class="bg-white rounded-3xl w-[96vw] h-[94vh] max-w-[1600px] shadow-2xl flex flex-col overflow-hidden fade-in border border-teal-900/20">
-
-      <!-- Cabeçalho Verde Petróleo -->
       <div class="bg-[#043e40] text-white px-5 sm:px-8 py-4 flex items-center justify-between gap-4 shrink-0">
         <div class="min-w-0">
           <span id="det-categoria-badge" class="inline-block text-[11px] font-extrabold uppercase tracking-wider px-3 py-0.5 rounded-full bg-white/15 text-amber-300 mb-1"></span>
@@ -464,38 +414,30 @@
         </div>
       </div>
 
-      <!-- Corpo Dividido: Esquerda (Galeria Ampliada de Vídeos/Imagens/GIFs) | Direita (Edição de Texto e Upload de + Mídias) -->
       <div class="flex-1 overflow-y-auto grid grid-cols-1 lg:grid-cols-12">
-
-        <!-- COLUNA ESQUERDA (7/12): GALERIA DE VÍDEOS, IMAGENS E GIFS -->
         <div class="lg:col-span-7 bg-slate-950 p-4 sm:p-6 flex flex-col gap-5 overflow-y-auto">
           <div class="flex items-center justify-between text-white">
             <h3 class="text-sm font-extrabold uppercase tracking-wider text-teal-200">
-              <i class="fa-solid fa-photo-film text-amber-400 mr-1.5"></i> Vídeos, Imagens e GIFs deste Sinal
+              <i class="fa-solid fa-photo-film text-amber-400 mr-1.5"></i> Vídeos, Imagens e GIFs (Google Drive)
             </h3>
             <span id="det-total-midias" class="text-xs font-bold px-2.5 py-1 rounded-full bg-white/10 text-amber-300"></span>
           </div>
-
           <div id="det-galeria-midias" class="space-y-5"></div>
         </div>
 
-        <!-- COLUNA DIREITA (5/12): TEXTO EXPLICATIVO EDITÁVEL + ADICIONAR NOVAS MÍDIAS -->
         <div class="lg:col-span-5 bg-white p-5 sm:p-7 flex flex-col justify-between gap-6 overflow-y-auto border-l border-slate-200">
           <div class="space-y-6">
-            <!-- Formulário Editar Texto, Título e Categoria -->
             <form onsubmit="salvarEdicaoTextoSinal(event)" class="space-y-4">
               <div class="flex items-center justify-between border-b border-slate-100 pb-2">
                 <h4 class="font-extrabold text-[#043e40] text-sm uppercase tracking-wider">
                   <i class="fa-solid fa-pen-to-square text-pink-600 mr-1.5"></i> Dados e Explicação do Sinal
                 </h4>
               </div>
-
               <div>
                 <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Título do Sinal</label>
                 <input type="text" id="det-edit-titulo" required
                   class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-slate-900 focus:ring-2 focus:ring-[#043e40] outline-none" />
               </div>
-
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Categoria</label>
@@ -508,28 +450,25 @@
                     class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
                 </div>
               </div>
-
               <div>
                 <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Texto Explicativo Completo</label>
                 <textarea id="det-edit-texto" rows="6" required
                   class="w-full px-3.5 py-3 rounded-xl border border-slate-300 text-sm leading-relaxed text-slate-800 focus:ring-2 focus:ring-[#043e40] outline-none"></textarea>
               </div>
-
               <button type="submit" class="w-full py-3 rounded-xl btn-vibrante text-white font-extrabold text-sm shadow-sm cursor-pointer">
                 <i class="fa-solid fa-floppy-disk mr-1.5"></i> Salvar Alterações de Texto
               </button>
             </form>
 
-            <!-- Bloco Adicionar Mais Vídeos, Imagens ou GIFs ao Mesmo Sinal -->
             <form onsubmit="adicionarMaisMidiasAoSinal(event)" class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
               <h4 class="font-extrabold text-[#043e40] text-xs uppercase tracking-wider flex items-center gap-2">
-                <i class="fa-solid fa-cloud-arrow-up text-pink-600 text-base"></i> Adicionar Mais Vídeos, Imagens ou GIFs
+                <i class="fa-brands fa-google-drive text-pink-600 text-base"></i> Adicionar Mais Vídeos, Imagens ou GIFs no Drive
               </h4>
-              <p class="text-xs text-slate-500">Você pode selecionar vários arquivos de uma vez para anexar a este sinal.</p>
+              <p class="text-xs text-slate-500">Selecione um ou mais arquivos para salvar automaticamente no Google Drive.</p>
               <input type="file" id="det-novos-arquivos" multiple accept="video/*,image/*" required
                 class="w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:font-bold file:bg-[#043e40] file:text-white cursor-pointer" />
               <button type="submit" class="w-full py-2.5 rounded-xl ring-vibrante text-white font-extrabold text-xs uppercase tracking-wider shadow-sm cursor-pointer">
-                + Anexar Mídias Selecionadas
+                + Anexar Mídias no Google Drive
               </button>
             </form>
           </div>
@@ -538,9 +477,7 @@
     </div>
   </div>
 
-  <!-- ======================================================================= -->
-  <!-- MODAL 2: CADASTRAR NOVO SINAL OFICIAL (SUPORTA MÚLTIPLOS ARQUIVOS)       -->
-  <!-- ======================================================================= -->
+  <!-- MODAL 2: CADASTRAR NOVO SINAL OFICIAL -->
   <div id="modal-novo-sinal" class="fixed inset-0 bg-slate-950/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-xl w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto fade-in">
       <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
@@ -553,7 +490,6 @@
           <input type="text" id="novo-sinal-titulo" required placeholder="Ex: Obrigado / Obrigada"
             class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-[#043e40]" />
         </div>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Categoria</label>
@@ -564,19 +500,16 @@
             <select id="novo-sinal-subcat" class="w-full px-3 py-2.5 rounded-xl border border-slate-300 text-sm bg-white"></select>
           </div>
         </div>
-
         <div>
           <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Texto Explicativo</label>
           <textarea id="novo-sinal-texto" rows="4" required placeholder="Descreva a configuração de mão, ponto de articulação e movimento..."
             class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none focus:ring-2 focus:ring-[#043e40]"></textarea>
         </div>
-
         <div>
-          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Vídeos, Imagens e GIFs (Opcional • Pode selecionar vários)</label>
+          <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Vídeos, Imagens e GIFs (Salvos no Google Drive)</label>
           <input type="file" id="novo-sinal-arquivos" multiple accept="video/*,image/*"
             class="w-full text-xs text-slate-600 file:mr-2 file:py-2 file:px-3.5 file:rounded-xl file:border-0 file:font-bold file:bg-[#043e40]/10 file:text-[#043e40]" />
         </div>
-
         <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
           <button type="button" onclick="fecharModal('modal-novo-sinal')" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100">Cancelar</button>
           <button type="submit" class="px-5 py-2.5 rounded-xl btn-vibrante text-white font-extrabold text-sm shadow-sm cursor-pointer">
@@ -587,9 +520,7 @@
     </div>
   </div>
 
-  <!-- ======================================================================= -->
-  <!-- MODAL 3: NOVA CATEGORIA / SUBCATEGORIA                                  -->
-  <!-- ======================================================================= -->
+  <!-- MODAL 3: NOVA CATEGORIA / SUBCATEGORIA -->
   <div id="modal-cat" class="fixed inset-0 bg-slate-950/65 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl fade-in">
       <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
@@ -619,7 +550,7 @@
   </div>
 
   <!-- ======================================================================= -->
-  <!-- JAVASCRIPT DO PAINEL ADMINISTRATIVO                                     -->
+  <!-- JAVASCRIPT DO PAINEL ADMINISTRATIVO (INTEGRAÇÃO GOOGLE DRIVE)           -->
   <!-- ======================================================================= -->
   <script>
     const db = window.supabase.createClient(SUPABASE_CONFIG.URL, SUPABASE_CONFIG.ANON_KEY);
@@ -660,6 +591,48 @@
       setTimeout(() => el.classList.add('hidden'), 4000);
     }
 
+    // --- FUNÇÕES DE UPLOAD E EXCLUSÃO NO GOOGLE DRIVE ---
+    function arquivoParaBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadArquivoDrive(file, pasta) {
+      if (!SUPABASE_CONFIG.DRIVE_UPLOAD_URL || SUPABASE_CONFIG.DRIVE_UPLOAD_URL.includes('COLE_AQUI')) {
+        throw new Error('Configure a DRIVE_UPLOAD_URL no arquivo config.js.');
+      }
+      const base64 = await arquivoParaBase64(file);
+      const resposta = await fetch(SUPABASE_CONFIG.DRIVE_UPLOAD_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          acao: 'upload',
+          pasta: pasta,
+          nomeArquivo: `${Date.now()}_${file.name}`,
+          mimeType: file.type || 'application/octet-stream',
+          base64: base64
+        })
+      });
+      const json = await resposta.json();
+      if (!json.sucesso) throw new Error(json.erro || 'Falha ao enviar para o Google Drive.');
+      return { url: json.url, path: json.fileId };
+    }
+
+    async function excluirArquivoDrive(fileId) {
+      if (!fileId || !SUPABASE_CONFIG.DRIVE_UPLOAD_URL) return;
+      try {
+        await fetch(SUPABASE_CONFIG.DRIVE_UPLOAD_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ acao: 'delete', fileId: fileId })
+        });
+      } catch (e) {}
+    }
+
     function toggleMenuMobile(abrir) {
       document.getElementById('sidebar').classList.toggle('-translate-x-full', !abrir);
       document.getElementById('mobile-backdrop').classList.toggle('hidden', !abrir);
@@ -684,7 +657,6 @@
         : 'py-3.5 text-teal-300/60 hover:text-white cursor-pointer';
     }
 
-    // --- VALIDAÇÃO DE SENHA SEGURA PARA NOVO ADM ---
     function checarCriteriosSenhaAdm(senha) {
       return {
         len: senha.length >= 8,
@@ -755,15 +727,9 @@
       const confirma = document.getElementById('cad-adm-senha-confirma').value;
       const criterios = checarCriteriosSenhaAdm(senha);
 
-      if (/\s/.test(perfil.trim())) {
-        return toast('O login administrativo não pode conter espaços.', true);
-      }
-      if (!Object.values(criterios).every(Boolean)) {
-        return toast('A senha deve atender a todos os requisitos de segurança.', true);
-      }
-      if (senha !== confirma) {
-        return toast('As senhas digitadas não coincidem.', true);
-      }
+      if (/\s/.test(perfil.trim())) return toast('O login administrativo não pode conter espaços.', true);
+      if (!Object.values(criterios).every(Boolean)) return toast('A senha deve atender a todos os requisitos de segurança.', true);
+      if (senha !== confirma) return toast('As senhas digitadas não coincidem.', true);
 
       showLoader('Cadastrando novo administrador...');
       const { data, error } = await db.rpc('registrar_admin', {
@@ -840,7 +806,6 @@
 
     function fecharModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    // Unifica mídia principal legada (url_midia) + lista de múltiplas mídias (midias_extras)
     function obterTodasMidiasSinal(s) {
       const lista = [];
       if (s.url_midia && s.tipo_midia !== 'TEXTO') {
@@ -858,14 +823,19 @@
       return 'IMAGEM';
     }
 
+    // Renderiza player do Google Drive (iframe para vídeo do Drive, video tag se MP4 direto, img para fotos/GIFs)
     function renderMidiaCard(tipo, url) {
       if (!url || tipo === 'TEXTO') return '';
-      return tipo === 'VIDEO'
-        ? `<video src="${url}" controls loop playsinline class="w-full max-h-52 rounded-xl bg-slate-950 object-contain"></video>`
-        : `<img src="${url}" class="w-full max-h-52 rounded-xl bg-slate-100 object-contain" />`;
+      if (tipo === 'VIDEO') {
+        if (url.includes('drive.google.com')) {
+          return `<iframe src="${url}" class="w-full h-52 rounded-xl bg-slate-950 border-0" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+        }
+        return `<video src="${url}" controls loop playsinline class="w-full max-h-52 rounded-xl bg-slate-950 object-contain"></video>`;
+      }
+      return `<img src="${url}" class="w-full max-h-52 rounded-xl bg-slate-100 object-contain" />`;
     }
 
-    // --- 1. CATEGORIAS (ADICIONAR E EXCLUIR) ---
+    // --- 1. CATEGORIAS ---
     async function carregarCategorias() {
       const { data } = await db.from('categorias').select('*').order('ordem');
       categorias = data || [];
@@ -970,7 +940,7 @@
       carregarCategorias();
     }
 
-    // --- 2. SINAIS (LISTAGEM, TELA AMPLIADA E MÚLTIPLAS MÍDIAS) ---
+    // --- 2. SINAIS (GOOGLE DRIVE) ---
     async function carregarSinais() {
       const { data } = await db.from('sinais').select('*').order('atualizado_em', { ascending: false });
       sinais = data || [];
@@ -1019,7 +989,6 @@
       }).join('') : '<div class="col-span-full bg-white p-10 rounded-2xl border border-slate-200 text-center text-slate-400 font-semibold">Nenhum sinal encontrado.</div>';
     }
 
-    // Abre o sinal ocupando ~95% da tela
     function abrirDetalheSinal(id) {
       const s = sinais.find(item => item.id === id);
       if (!s) return;
@@ -1049,7 +1018,9 @@
           </div>
           <div class="p-2 flex items-center justify-center bg-black">
             ${m.tipo === 'VIDEO'
-              ? `<video src="${m.url}" controls loop playsinline class="w-full max-h-[65vh] rounded-xl object-contain"></video>`
+              ? (m.url.includes('drive.google.com')
+                  ? `<iframe src="${m.url}" class="w-full h-[65vh] rounded-xl border-0" allow="autoplay; fullscreen" allowfullscreen></iframe>`
+                  : `<video src="${m.url}" controls loop playsinline class="w-full max-h-[65vh] rounded-xl object-contain"></video>`)
               : `<img src="${m.url}" class="w-full max-h-[65vh] rounded-xl object-contain" />`
             }
           </div>
@@ -1058,7 +1029,7 @@
         <div class="bg-slate-900/70 border border-slate-800 rounded-2xl p-10 text-center text-slate-400">
           <i class="fa-solid fa-film text-3xl mb-2 text-teal-400"></i>
           <p class="text-sm font-semibold">Este sinal ainda possui apenas texto explicativo.</p>
-          <p class="text-xs mt-1">Use o formulário ao lado para anexar vídeos, imagens ou GIFs.</p>
+          <p class="text-xs mt-1">Use o formulário ao lado para anexar vídeos, imagens ou GIFs no Google Drive.</p>
         </div>`;
 
       document.getElementById('modal-detalhe-sinal').classList.remove('hidden');
@@ -1089,7 +1060,7 @@
       if (!files.length) return;
 
       try {
-        showLoader(`Enviando ${files.length} arquivo(s)...`);
+        showLoader(`Enviando ${files.length} arquivo(s) ao Google Drive...`);
         const extrasAtuais = Array.isArray(sinalAberto.midias_extras) ? [...sinalAberto.midias_extras] : [];
         let urlPrincipal = sinalAberto.url_midia;
         let pathPrincipal = sinalAberto.storage_path;
@@ -1097,18 +1068,14 @@
 
         for (const file of files) {
           const tipo = detectarTipoArquivo(file);
-          const ext = file.name.split('.').pop();
-          const path = `oficiais/${Date.now()}_${Math.random().toString(36).slice(2, 7)}.${ext}`;
-          const { error: upErr } = await db.storage.from(SUPABASE_CONFIG.BUCKET).upload(path, file);
-          if (upErr) throw upErr;
-          const url = db.storage.from(SUPABASE_CONFIG.BUCKET).getPublicUrl(path).data.publicUrl;
+          const up = await uploadArquivoDrive(file, 'oficiais');
 
           if (!urlPrincipal || tipoPrincipal === 'TEXTO') {
-            urlPrincipal = url;
-            pathPrincipal = path;
+            urlPrincipal = up.url;
+            pathPrincipal = up.path;
             tipoPrincipal = tipo;
           } else {
-            extrasAtuais.push({ tipo, url, path });
+            extrasAtuais.push({ tipo, url: up.url, path: up.path });
           }
         }
 
@@ -1123,11 +1090,11 @@
 
         hideLoader();
         if (error) return toast(error.message, true);
-        toast('Novas mídias anexadas ao sinal!');
+        toast('Novas mídias salvas no Google Drive!');
         carregarSinais();
       } catch (err) {
         hideLoader();
-        toast('Erro no envio: ' + err.message, true);
+        toast('Erro no envio ao Drive: ' + err.message, true);
       }
     }
 
@@ -1140,7 +1107,7 @@
       let tipoPrincipal = sinalAberto.tipo_midia;
 
       if (isPrincipal) {
-        if (pathPrincipal) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove([pathPrincipal]);
+        if (pathPrincipal) await excluirArquivoDrive(pathPrincipal);
         if (extras.length > 0) {
           const proxima = extras.shift();
           urlPrincipal = proxima.url;
@@ -1153,7 +1120,7 @@
         }
       } else if (extraIndex >= 0 && extras[extraIndex]) {
         const alvo = extras[extraIndex];
-        if (alvo.path) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove([alvo.path]);
+        if (alvo.path) await excluirArquivoDrive(alvo.path);
         extras.splice(extraIndex, 1);
       }
 
@@ -1173,12 +1140,12 @@
     async function excluirSinalAtual() {
       if (!sinalAberto || !confirm(`Excluir permanentemente o sinal "${sinalAberto.titulo_sinal}"?`)) return;
       showLoader('Excluindo sinal...');
-      const paths = [];
-      if (sinalAberto.storage_path) paths.push(sinalAberto.storage_path);
+      if (sinalAberto.storage_path) await excluirArquivoDrive(sinalAberto.storage_path);
       if (Array.isArray(sinalAberto.midias_extras)) {
-        sinalAberto.midias_extras.forEach(m => { if (m.path) paths.push(m.path); });
+        for (const m of sinalAberto.midias_extras) {
+          if (m.path) await excluirArquivoDrive(m.path);
+        }
       }
-      if (paths.length) await db.storage.from(SUPABASE_CONFIG.BUCKET).remove(paths);
       await db.from('sinais').delete().eq('id', sinalAberto.id);
       hideLoader();
       sinalAberto = null;
@@ -1198,23 +1165,19 @@
       e.preventDefault();
       const files = Array.from(document.getElementById('novo-sinal-arquivos').files);
       try {
-        showLoader('Cadastrando sinal...');
+        showLoader(files.length ? `Enviando ${files.length} arquivo(s) para o Google Drive...` : 'Cadastrando sinal...');
         let urlPrincipal = null, pathPrincipal = null, tipoPrincipal = 'TEXTO';
         const extras = [];
 
         for (let i = 0; i < files.length; i++) {
           const file = files[i];
           const tipo = detectarTipoArquivo(file);
-          const ext = file.name.split('.').pop();
-          const path = `oficiais/${Date.now()}_${i}_${Math.random().toString(36).slice(2, 6)}.${ext}`;
-          const { error: upErr } = await db.storage.from(SUPABASE_CONFIG.BUCKET).upload(path, file);
-          if (upErr) throw upErr;
-          const url = db.storage.from(SUPABASE_CONFIG.BUCKET).getPublicUrl(path).data.publicUrl;
+          const up = await uploadArquivoDrive(file, 'oficiais');
 
           if (i === 0) {
-            urlPrincipal = url; pathPrincipal = path; tipoPrincipal = tipo;
+            urlPrincipal = up.url; pathPrincipal = up.path; tipoPrincipal = tipo;
           } else {
-            extras.push({ tipo, url, path });
+            extras.push({ tipo, url: up.url, path: up.path });
           }
         }
 
@@ -1233,7 +1196,7 @@
         hideLoader();
         if (error) return toast(error.message, true);
         fecharModal('modal-novo-sinal');
-        toast('Sinal cadastrado com sucesso!');
+        toast('Sinal salvo com sucesso no Google Drive!');
         carregarSinais();
       } catch (err) {
         hideLoader();
@@ -1288,7 +1251,7 @@
       carregarComentarios();
     }
 
-    // --- 4. SUGESTÕES (SUPORTA MÚLTIPLOS ANEXOS DO USUÁRIO) ---
+    // --- 4. SUGESTÕES ---
     async function carregarSugestoes() {
       const { data } = await db.from('sugestoes').select('*').order('data_envio', { ascending: false });
       const lista = data || [];
